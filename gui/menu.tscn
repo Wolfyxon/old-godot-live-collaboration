@@ -1,0 +1,685 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://addons/GdLiveCollaboration/guiTheme.tres" type="Theme" id=1]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/menu.gd" type="Script" id=2]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/tabs.gd" type="Script" id=3]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/styles/blackBgLabel.tres" type="StyleBox" id=4]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/usersTable.gd" type="Script" id=5]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/LinkButton.gd" type="Script" id=6]
+[ext_resource path="res://addons/GdLiveCollaboration/fonts/NotoSans/NotoSans-Black.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/button.gd" type="Script" id=8]
+[ext_resource path="res://addons/GdLiveCollaboration/fonts/NotoSans/NotoSans-Regular.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/cover.gd" type="Script" id=10]
+
+[sub_resource type="DynamicFont" id=7]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 42
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 15
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 15
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 22
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=1]
+
+[node name="menu" type="AcceptDialog"]
+visible = true
+self_modulate = Color( 0.929412, 0.929412, 0.929412, 1 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -379.5
+margin_top = -212.5
+margin_right = 379.5
+margin_bottom = 212.5
+size_flags_horizontal = 15
+size_flags_vertical = 15
+theme = ExtResource( 1 )
+window_title = "Godot Live Collaboration"
+resizable = true
+script = ExtResource( 2 )
+
+[node name="tabs" type="TabContainer" parent="."]
+anchor_left = 0.0158103
+anchor_right = 0.982872
+anchor_bottom = 0.917313
+margin_left = -4.00002
+margin_top = 8.0
+margin_right = 5.00012
+margin_bottom = -2.858
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 1 )
+tab_align = 0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Join or host" type="Tabs" parent="tabs"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 29.0
+margin_right = -5.0
+margin_bottom = -5.0
+hint_tooltip = "Joining and hosting
+"
+
+[node name="vbox" type="VBoxContainer" parent="tabs/Join or host"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="nick" type="VBoxContainer" parent="tabs/Join or host/vbox"]
+margin_right = 733.0
+margin_bottom = 56.0
+
+[node name="Label" type="Label" parent="tabs/Join or host/vbox/nick"]
+margin_right = 733.0
+margin_bottom = 22.0
+text = "Your nickname:"
+align = 1
+
+[node name="nick_input" type="LineEdit" parent="tabs/Join or host/vbox/nick"]
+margin_top = 26.0
+margin_right = 733.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 300, 30 )
+text = "Guest"
+placeholder_text = "Da epic cool guy 2137"
+
+[node name="Label" type="Label" parent="tabs/Join or host/vbox"]
+visible = false
+margin_top = 60.0
+margin_right = 733.0
+margin_bottom = 78.0
+custom_styles/normal = ExtResource( 4 )
+
+[node name="start" type="HBoxContainer" parent="tabs/Join or host/vbox"]
+margin_top = 60.0
+margin_right = 733.0
+margin_bottom = 337.0
+
+[node name="join" type="VBoxContainer" parent="tabs/Join or host/vbox/start"]
+margin_right = 352.0
+margin_bottom = 277.0
+rect_pivot_offset = Vector2( -124.5, -4.5 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="tabs/Join or host/vbox/start/join"]
+margin_right = 352.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 7 )
+text = "Join:"
+align = 1
+
+[node name="Label2" type="Label" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 35.0
+margin_right = 352.0
+margin_bottom = 57.0
+text = "IP adress"
+
+[node name="input_ip" type="LineEdit" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 61.0
+margin_right = 352.0
+margin_bottom = 83.0
+clear_button_enabled = true
+placeholder_text = "Example 127.0.0.1:6969"
+
+[node name="Label3" type="Label" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 87.0
+margin_right = 352.0
+margin_bottom = 109.0
+text = "Password"
+
+[node name="input_password" type="LineEdit" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 113.0
+margin_right = 352.0
+margin_bottom = 135.0
+rect_pivot_offset = Vector2( -104.5, -77.5 )
+secret = true
+clear_button_enabled = true
+placeholder_text = "Password"
+
+[node name="Label4" type="Label" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 139.0
+margin_right = 352.0
+margin_bottom = 195.0
+custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
+text = "With file and project settings access,
+ users may remotely run malicous code
+on your machine. Host can see your IP adress."
+
+[node name="ch_accept" type="CheckBox" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 199.0
+margin_right = 352.0
+margin_bottom = 223.0
+text = "I understand the risk"
+
+[node name="btn_join" type="Button" parent="tabs/Join or host/vbox/start/join"]
+margin_top = 227.0
+margin_right = 352.0
+margin_bottom = 249.0
+text = "Join server"
+
+[node name="Control" type="Control" parent="tabs/Join or host/vbox/start"]
+margin_left = 356.0
+margin_right = 376.0
+margin_bottom = 277.0
+rect_min_size = Vector2( 20, 75.01 )
+
+[node name="host" type="VBoxContainer" parent="tabs/Join or host/vbox/start"]
+margin_left = 380.0
+margin_right = 733.0
+margin_bottom = 277.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label2" type="Label" parent="tabs/Join or host/vbox/start/host"]
+margin_right = 353.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 7 )
+text = "Host:"
+align = 1
+
+[node name="Label" type="Label" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 35.0
+margin_right = 353.0
+margin_bottom = 57.0
+text = "Port"
+
+[node name="input_port" type="SpinBox" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 61.0
+margin_right = 353.0
+margin_bottom = 83.0
+max_value = 9999.0
+value = 2137.0
+
+[node name="Label3" type="Label" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 87.0
+margin_right = 353.0
+margin_bottom = 109.0
+rect_pivot_offset = Vector2( 5.5, 26.5 )
+text = "Password (optional)"
+
+[node name="input_password" type="LineEdit" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 113.0
+margin_right = 353.0
+margin_bottom = 135.0
+rect_pivot_offset = Vector2( -104.5, -77.5 )
+secret = true
+clear_button_enabled = true
+placeholder_text = "This password will be required for people to join"
+
+[node name="ch_aproval" type="CheckButton" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 139.0
+margin_right = 353.0
+margin_bottom = 163.0
+text = "Manual join aproval"
+
+[node name="Label4" type="Label" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 167.0
+margin_right = 353.0
+margin_bottom = 223.0
+custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
+text = "With file and project settings access,
+ users may remotely run malicous code
+on your machine."
+
+[node name="ch_accept" type="CheckBox" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 227.0
+margin_right = 353.0
+margin_bottom = 251.0
+text = "I understand the risk"
+
+[node name="btn_start" type="Button" parent="tabs/Join or host/vbox/start/host"]
+margin_top = 255.0
+margin_right = 353.0
+margin_bottom = 277.0
+text = "Start server"
+
+[node name="client" type="Tabs" parent="tabs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 29.0
+margin_right = -5.0
+margin_bottom = -5.0
+
+[node name="vbox" type="VBoxContainer" parent="tabs/client"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="actions" type="HBoxContainer" parent="tabs/client/vbox"]
+margin_right = 733.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+
+[node name="btn_disconnect" type="Button" parent="tabs/client/vbox/actions"]
+margin_right = 733.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "Disconnect from current server"
+
+[node name="btn_info" type="ToolButton" parent="tabs/client/vbox"]
+margin_top = 26.0
+margin_right = 733.0
+margin_bottom = 48.0
+hint_tooltip = "Don't share this to anyone!"
+text = "< Show sensitive data > "
+script = ExtResource( 8 )
+
+[node name="info" type="VBoxContainer" parent="tabs/client/vbox/btn_info"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = 39.0
+alignment = 2
+
+[node name="ip" type="Label" parent="tabs/client/vbox/btn_info/info"]
+margin_top = 39.0
+margin_right = 733.0
+margin_bottom = 61.0
+text = "Connected to:"
+
+[node name="session" type="Label" parent="tabs/client/vbox/btn_info/info"]
+visible = false
+margin_top = 39.0
+margin_right = 733.0
+margin_bottom = 61.0
+text = "Session ID:"
+
+[node name="cover" type="ColorRect" parent="tabs/client"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 1
+color = Color( 0, 0, 0, 0.552941 )
+script = ExtResource( 10 )
+
+[node name="Label" type="Label" parent="tabs/client/cover"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -53.0
+margin_top = -11.0
+margin_right = 53.0
+margin_bottom = 11.0
+text = "Not connected!"
+
+[node name="server" type="Tabs" parent="tabs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 29.0
+margin_right = -5.0
+margin_bottom = -5.0
+
+[node name="vbox" type="VBoxContainer" parent="tabs/server"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="btn_show_join" type="Button" parent="tabs/server/vbox"]
+margin_right = 733.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 3 )
+text = "< Show join information >"
+script = ExtResource( 8 )
+visibility_switch = NodePath("../../popup_join_info")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tabs/server/vbox"]
+margin_top = 35.0
+margin_right = 733.0
+margin_bottom = 49.0
+alignment = 1
+
+[node name="LinkButton" type="LinkButton" parent="tabs/server/vbox/HBoxContainer"]
+margin_left = 140.0
+margin_right = 592.0
+margin_bottom = 14.0
+text = "How to let others join? Opening ports (even without configuring router)"
+script = ExtResource( 6 )
+
+[node name="serverOptions" type="HBoxContainer" parent="tabs/server/vbox"]
+margin_top = 53.0
+margin_right = 733.0
+margin_bottom = 77.0
+alignment = 1
+
+[node name="btn_stop_server" type="Button" parent="tabs/server/vbox/serverOptions"]
+margin_left = 183.0
+margin_right = 267.0
+margin_bottom = 24.0
+text = "Stop server"
+
+[node name="btn_set_password" type="Button" parent="tabs/server/vbox/serverOptions"]
+margin_left = 271.0
+margin_right = 367.0
+margin_bottom = 24.0
+text = "Set password"
+
+[node name="ch_aproval" type="CheckButton" parent="tabs/server/vbox/serverOptions"]
+margin_left = 371.0
+margin_right = 549.0
+margin_bottom = 24.0
+hint_tooltip = "If enabled, joining users will require your acceptation to let them join."
+text = "Manual join aproval"
+
+[node name="Label" type="Label" parent="tabs/server/vbox"]
+margin_top = 81.0
+margin_right = 733.0
+margin_bottom = 103.0
+text = "Connected users:"
+
+[node name="btn_requests" type="Button" parent="tabs/server/vbox"]
+margin_top = 107.0
+margin_right = 733.0
+margin_bottom = 129.0
+text = "View join requests (0)"
+
+[node name="people" type="ScrollContainer" parent="tabs/server/vbox"]
+margin_top = 133.0
+margin_right = 733.0
+margin_bottom = 345.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="columns" type="GridContainer" parent="tabs/server/vbox/people"]
+margin_right = 733.0
+margin_bottom = 212.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 7
+script = ExtResource( 5 )
+
+[node name="id" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_right = 99.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "ID"
+
+[node name="nick" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_left = 103.0
+margin_right = 202.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "Nickname"
+
+[node name="ip" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_left = 206.0
+margin_right = 305.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "IP adress"
+
+[node name="permission" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_left = 309.0
+margin_right = 424.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "Permission level"
+
+[node name="log" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_left = 428.0
+margin_right = 527.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "."
+
+[node name="kick" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_left = 531.0
+margin_right = 630.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "."
+
+[node name="ban" type="Label" parent="tabs/server/vbox/people/columns"]
+margin_left = 634.0
+margin_right = 733.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+custom_styles/normal = ExtResource( 4 )
+text = "."
+
+[node name="_id" type="Label" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_top = 22.0
+margin_right = 99.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "0"
+
+[node name="_nick" type="Label" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_left = 100.0
+margin_top = 22.0
+margin_right = 213.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "Da epic cool guy"
+
+[node name="_ip" type="MenuButton" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_left = 217.0
+margin_top = 22.0
+margin_right = 313.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "< show >"
+
+[node name="_permission" type="OptionButton" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_left = 317.0
+margin_top = 22.0
+margin_right = 432.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "host"
+items = [ "host", null, false, 2, null, "admin", null, false, 1, null, "editor", null, false, 0, null ]
+selected = 0
+
+[node name="_log" type="Button" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_left = 436.0
+margin_top = 22.0
+margin_right = 532.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "View log"
+
+[node name="_kick" type="Button" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_left = 536.0
+margin_top = 22.0
+margin_right = 632.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "Disconnect"
+
+[node name="_ban" type="Button" parent="tabs/server/vbox/people/columns"]
+visible = false
+margin_left = 636.0
+margin_top = 22.0
+margin_right = 732.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+text = "Ban"
+
+[node name="cover" type="ColorRect" parent="tabs/server"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 1
+color = Color( 0, 0, 0, 0.552941 )
+script = ExtResource( 10 )
+
+[node name="Label" type="Label" parent="tabs/server/cover"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -43.0
+margin_top = -11.0
+margin_right = 43.0
+margin_bottom = 11.0
+text = "Not hosting!"
+
+[node name="popup_join_info" type="AcceptDialog" parent="tabs/server"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -366.5
+margin_top = -124.5
+margin_right = 366.5
+margin_bottom = 124.5
+window_title = "Join information"
+
+[node name="vbox" type="VBoxContainer" parent="tabs/server/popup_join_info"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -38.0
+custom_constants/separation = -10
+
+[node name="label" type="Label" parent="tabs/server/popup_join_info/vbox"]
+margin_right = 717.0
+margin_bottom = 22.0
+text = "ip:"
+align = 1
+
+[node name="ip" type="Label" parent="tabs/server/popup_join_info/vbox"]
+margin_top = 12.0
+margin_right = 717.0
+margin_bottom = 78.0
+custom_colors/font_color = Color( 0.360784, 1, 0, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "127.0.0.1:2137"
+align = 1
+
+[node name="password" type="Label" parent="tabs/server/popup_join_info/vbox"]
+margin_top = 68.0
+margin_right = 717.0
+margin_bottom = 98.0
+custom_fonts/font = SubResource( 5 )
+text = "password: <not set>"
+align = 1
+
+[node name="label2" type="Label" parent="tabs/server/popup_join_info/vbox"]
+margin_top = 88.0
+margin_right = 717.0
+margin_bottom = 118.0
+custom_fonts/font = SubResource( 6 )
+text = "Before joining make sure you trust the host and other connected people!"
+align = 1
+
+[node name="info" type="Tabs" parent="tabs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 29.0
+margin_right = -5.0
+margin_bottom = -5.0
+
+[node name="vbox" type="VBoxContainer" parent="tabs/info"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="titles" type="VBoxContainer" parent="tabs/info/vbox"]
+margin_right = 733.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 50 )
+
+[node name="title" type="Label" parent="tabs/info/vbox/titles"]
+margin_right = 733.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 2 )
+text = "Godot Live Collaboration Addon"
+align = 1
+
+[node name="author" type="Label" parent="tabs/info/vbox/titles"]
+margin_top = 43.0
+margin_right = 733.0
+margin_bottom = 82.0
+text = "version 0.0
+by Wolfyxon"
+align = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="tabs/info/vbox/titles"]
+margin_top = 86.0
+margin_right = 733.0
+margin_bottom = 100.0
+
+[node name="LinkButton" type="LinkButton" parent="tabs/info/vbox/titles/CenterContainer"]
+margin_left = 307.0
+margin_right = 426.0
+margin_bottom = 14.0
+text = "https://github.com"
+script = ExtResource( 6 )
+
+[node name="warning" type="VBoxContainer" parent="tabs/info/vbox"]
+margin_top = 104.0
+margin_right = 733.0
+margin_bottom = 239.0
+
+[node name="Label" type="Label" parent="tabs/info/vbox/warning"]
+margin_right = 733.0
+margin_bottom = 31.0
+custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "WARNING"
+align = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="tabs/info/vbox/warning"]
+margin_top = 35.0
+margin_right = 733.0
+margin_bottom = 135.0
+rect_min_size = Vector2( 0, 100 )
+bbcode_enabled = true
+bbcode_text = "This plugin is still in development. There's a risk of your project getting corrupted, so make sure to always back up your project before editing.
+Users can edit ALL scripts and project settings, that means everyone can run malicous code on each other users' machine.
+If you find an exploit or corruption bug report it immidiately on GitHub issues."
+text = "This plugin is still in development. There's a risk of your project getting corrupted, so make sure to always back up your project before editing.
+Users can edit ALL scripts and project settings, that means everyone can run malicous code on each other users' machine.
+If you find an exploit or corruption bug report it immidiately on GitHub issues."
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 751.0
+margin_bottom = 387.0
+custom_fonts/font = SubResource( 1 )
+text = "AAAa"
+__meta__ = {
+"_edit_lock_": true
+}
