@@ -1,3 +1,4 @@
+tool
 extends ColorRect
 
 var utils = preload("../../utils.gd").new()

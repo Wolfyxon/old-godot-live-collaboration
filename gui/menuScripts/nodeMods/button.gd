@@ -1,3 +1,4 @@
+tool
 extends Button
 
 export (NodePath) var visibility_switch

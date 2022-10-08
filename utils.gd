@@ -51,3 +51,17 @@ func get_descendants(node:Node,ignoredNodes:Array=[]) -> Array:
 	
 	return r
 
+func is_valid_url(url:String):
+	pass
+	if (" " in url): return false
+	if not("." in url): return false
+	
+	return true
+	
+	
+	
+	
+	
+	
+	
+	
