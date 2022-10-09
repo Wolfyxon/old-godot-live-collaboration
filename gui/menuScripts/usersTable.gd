@@ -25,13 +25,7 @@ var rows = []
 
 func _ready():
 	for i in template_columns: i.visible = false
-	
-#	for i in 3:
-#		$_permission.add_item(utils.permission_names[i],i)
-	
-	#add_row(1,"Wolfyxon","ur mom",2)
-	
-	
+
 
 func add_row(id,nickname,ip,lvl):
 	var clms = [] #id,nick,ip,perm,log,kick,ban
@@ -56,11 +50,11 @@ func add_row(id,nickname,ip,lvl):
 	
 	for i in clms:
 		i.set_meta("id",id)
+		i.set_meta("nick",nickname)
+		i.set_meta("nickname",nickname)
 		i.visible = true
 		
 	
-
-
 func get_columns():
 	var r = get_children()
 	for i in key_columns:

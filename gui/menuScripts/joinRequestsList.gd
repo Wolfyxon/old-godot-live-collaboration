@@ -9,18 +9,7 @@ signal denied
 
 func _ready():
 	$template.visible = false
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
-	add("among us","ur mom's ip")
+
 
 func get_pressed_button(path:NodePath):
 	for i in get_children():
@@ -67,8 +56,12 @@ func add(nickname,ip):
 	info.get_node("ip").text = ip
 	
 	aprove.set_meta("ip",ip)
+	aprove.set_meta("nick",nickname)
+	aprove.set_meta("nickname",nickname)
 	aprove.connect("pressed",self,"_aproved")
 	deny.set_meta("ip",ip)
+	deny.set_meta("nick",nickname)
+	deny.set_meta("nickname",nickname)
 	deny.connect("pressed",self,"_denied")
 	
 	add_child(d)

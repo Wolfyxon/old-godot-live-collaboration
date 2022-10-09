@@ -15,7 +15,6 @@ func _ready():
 func _physics_process(delta):
 	pass
 
-
 func get_tab_idx(tab: Tabs):
 	return get_children().find(tab)
 
