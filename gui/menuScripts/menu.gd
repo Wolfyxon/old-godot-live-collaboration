@@ -95,12 +95,12 @@ func _on_nick_input_text_changed(new_text):
 	error.text = ""
 	if not main: return
 	
+	main.nickname = new_text
 	main.server.host_nickname = new_text
 	main.client.nickname = new_text
 
 func _on_btn_disconnect_pressed():
 	emit_signal("disconnect_from_server")
 
-
 func _on_columns_kick(id:int):
-	main.server.kick(id,"Kicked by host")
+	main.server.kick(id,"Kicked by host.")

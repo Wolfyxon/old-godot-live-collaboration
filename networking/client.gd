@@ -16,6 +16,7 @@ var connected = false
 var current_ip = ""
 var current_port = 0
 var used_password = ""
+var client_id = -1
 
 onready var main = get_parent()
 
@@ -23,6 +24,7 @@ func _ready():
 	network.connect("connection_succeeded",self,"_connected")
 	network.connect("connection_failed",self,"_failed")
 	network.connect("server_disconnected",self,"_disconnected")
+	name = "client"
 
 func get_id():
 	return get_tree().get_network_unique_id()
@@ -31,7 +33,7 @@ func connect_to_server(ip:String,port:int,password:String=""):
 	if connected:
 		printerr("Client is already connected!")
 		return
-		
+
 	print("Connecting to: ",ip,":",port)
 	network.refuse_new_connections = false
 	var err = network.create_client(ip,port)
@@ -78,8 +80,10 @@ func _disconnected():
 	current_port = 0
 	emit_signal("disconnected")
 
+#####################################################################
+var other_clients = []
 
-puppet func server_response(version:float,host_nickname:String):
+puppet func server_response(version:float,host_nickname:String,color:Color,id:int):
 	emit_signal("server_responded")
 	print("Server accepted connection.")
 	print("Host nickname: ",host_nickname)
@@ -93,10 +97,8 @@ puppet func server_response(version:float,host_nickname:String):
 			"\nThis might cause major issues (including project file corruption).",
 			"WARNING")
 
-
-
-
-
+remote func update_self(currentScene,mousePos:Vector2,cameraPos:Vector3):
+	pass
 
 
 
