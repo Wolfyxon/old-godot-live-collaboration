@@ -103,6 +103,8 @@ puppet func store_file(path:String,buffer:PoolByteArray):
 	f.open(path,f.WRITE)
 	f.store_buffer(buffer)
 
+master func update_file(path:String,buffer:PoolByteArray):
+	pass
 
 
 

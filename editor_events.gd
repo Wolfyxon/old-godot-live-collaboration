@@ -30,6 +30,8 @@ func _ready():
 	get_tree().connect("node_added",self,"_node_added")
 	get_tree().connect("node_removed",self,"_node_removed")
 	
+	connect("property_changed",self,"_on_property_changed")
+	
 
 func get_root():
 	return get_editor_interface().get_node("/")
@@ -54,6 +56,11 @@ func _node_added(node:Node):
 	
 func _node_removed(node:Node):
 	emit_signal("node_removed",node)
+	
+
+func _on_property_changed(node:Node,key:String,value,scene_path:String):
+	if not main.server.server_running: rpc_id(1,"set_property",node.get_path(),key,value,scene_path)
+	rpc("set_property",node.get_path(),key,value,scene_path)
 	
 var cached_properties = {}
 func _property_check():
@@ -88,12 +95,16 @@ func _property_check_(): #run this always with thread!
 ################################################################################
 # NETWORK ZONE
 
-remotesync func set_property(path:NodePath,property:String,value):
+remotesync func set_property(path:NodePath,property:String,value,scene_path:String=""):
+	var id = get_tree().get_rpc_sender_id()
+	if scene_path != "":
+		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
+			#TODO: Download updated scene from peer who edited it
+			return
+	
 	var node = get_node(path)
 	if node:
 		node.set(property,value)
-
-
 
 ########### markers
 var marker_group_name = "LiveCollaboration_client_marker"
@@ -127,7 +138,6 @@ func _input(event):
 		rpc("move_cursor_marker",cursor_marker.global_position)
 		if not main.server.server_running: rpc_id(1,"move_cursor_marker",cursor_marker.global_position)
 	
-
 remote func remove_all_markers():
 	if not get_tree(): return
 	for i in get_tree().get_nodes_in_group(marker_group_name):
@@ -147,7 +157,7 @@ remote func create_markers(nickname:String,color:Color,id:int):
 		cursor_marker = cursor
 		camera_marker = camera
 		
-		cursor.visible = true
+		cursor.visible = false
 		camera.visible = false
 
 	camera.id = id; cursor.id = id
