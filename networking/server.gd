@@ -15,6 +15,7 @@ onready var network = NetworkedMultiplayerENet.new()
 var host_nickname = ""
 var server_password = ""
 #var pending_connection = []
+var connected_ids = []
 var connected = []
 
 onready var main = get_parent()
@@ -47,18 +48,13 @@ func stop_server():
 	if not network: return
 	if not server_running: return
 	print("Server stopped")
-	for i in get_connected_ids():
+	for i in connected_ids:
 		kick(i,"Server stopped by host.")
 	yield(get_tree(),"idle_frame")
 	network.close_connection()
 	server_running = false
 	emit_signal("server_stopped")
 
-func get_connected_ids():
-	var r = []
-	for i in connected:
-		r.append(i["id"])
-	return r
 
 func get_user_by_id(id:int):
 	for i in connected:
@@ -110,13 +106,15 @@ remote func server_message(message:String,title:String="Server message"):
 	main.menu.alert(message,title)
 	
 func _user_connected(id):
+	connected_ids.append(id)
 	print(network.get_peer_address(id)," connected with ID: ",id)
 	yield(get_tree().create_timer(3),"timeout")
-	if not get_user_by_id(id):
+	if not(get_user_by_id(id)) and (id in connected_ids):
 		print(network.get_peer_address(id)," kicked because of no authentication")
 		kick(id,"Auth timed out.")
 	
 func _user_disconnected(id):
+	connected_ids.erase(id)
 	var data = get_user_by_id(id)
 	print("user: ",id," ",data," disconnected")
 	if data and data in connected:
