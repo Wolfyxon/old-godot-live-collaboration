@@ -31,7 +31,6 @@ func _ready():
 	get_tree().connect("node_removed",self,"_node_removed")
 	
 
-
 func get_root():
 	return get_editor_interface().get_node("/")
 
@@ -58,8 +57,13 @@ func _node_removed(node:Node):
 	
 var cached_properties = {}
 func _property_check():
-	#if not Engine.editor_hint: return
-	var nodes = utils.get_descendants(editor_interface.get_edited_scene_root())
+	var t = Thread.new()
+	t.start(self,"_property_check_")
+
+func _property_check_(): #run this always with thread!
+	var scene = editor_interface.get_edited_scene_root()
+	var scene_path = scene.filename
+	var nodes = utils.get_descendants(scene)
 	for node in nodes:
 		var properties = utils.get_properties(node)
 		if node in cached_properties:
@@ -69,13 +73,13 @@ func _property_check():
 				var cached_value = cached_properties[node][key]
 				if key in cached:
 					if value != cached_value:
-						emit_signal("property_changed",node,key,value)
+						emit_signal("property_changed",node,key,value,scene_path)
 						cached_properties[node] = properties
 					else:
 						pass
 				else:
 					cached_properties[node][key] = value
-					emit_signal("property_changed",node,key,value)
+					emit_signal("property_changed",node,key,value,scene_path)
 					cached_properties[node] = properties
 		else:
 			cached_properties[node] = properties
