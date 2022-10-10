@@ -81,6 +81,7 @@ func kick(id:int,reason:String=""):
 
 remote func auth_client(nickname:String,password:String=""):
 	var id = get_tree().get_rpc_sender_id()
+	print("Authenticating user: ",id," with nickname: ",nickname)
 	var message_title = "Server rejected connection"
 	var error = null
 	if get_user_by_id(id):
@@ -117,7 +118,7 @@ func _user_connected(id):
 	
 func _user_disconnected(id):
 	var data = get_user_by_id(id)
-	print("user: ",data," disconnected")
+	print("user: ",id," ",data," disconnected")
 	if data and data in connected:
 		connected.erase(data)
 	

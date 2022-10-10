@@ -28,7 +28,12 @@ func get_id():
 	return get_tree().get_network_unique_id()
 
 func connect_to_server(ip:String,port:int,password:String=""):
+	if connected:
+		printerr("Client is already connected!")
+		return
+		
 	print("Connecting to: ",ip,":",port)
+	network.refuse_new_connections = false
 	var err = network.create_client(ip,port)
 	get_tree().network_peer = network
 	print("Error status: ",err)
@@ -37,9 +42,12 @@ func connect_to_server(ip:String,port:int,password:String=""):
 	if err == OK:
 		used_password = password
 		yield(get_tree().create_timer(5),"timeout")
-		emit_signal("gui_alert"
-		,"Timed out.\nCheck the host's IP adress, port and your internet connection.\nMake sure the hosts has opened ports."
-		,"Connection failed.")
+		if not connected:
+			print("Connection timed out")
+			emit_signal("gui_alert"
+			,"Timed out.\nCheck the host's IP adress, port and your internet connection.\nMake sure the hosts has opened ports."
+			,"Connection failed.")
+			disconnect_from_server()
 	else:
 		emit_signal("connection_failed",err)
 		emit_signal("gui_alert","Could not connect to server.\nError code: "+String(err),"Connection failed")
@@ -47,13 +55,15 @@ func connect_to_server(ip:String,port:int,password:String=""):
 func disconnect_from_server():
 	connected = false
 	network.close_connection()
+	_disconnected()
 
 func _connected():
-		main.server.rpc_id(1,"auth_client",nickname,used_password)
-		print("Successfuly connected")
-		connected = true
-		emit_signal("connection_success")
-	
+	print("Successfuly connected")
+	print("Requesting client authentication on server...")
+	main.server.rpc_id(1,"auth_client",nickname,used_password)
+	connected = true
+	emit_signal("connection_success")
+
 func _failed():
 	connected = false
 	printerr("Could not connect to: ",current_ip,":",current_port)
@@ -62,6 +72,7 @@ func _failed():
 
 func _disconnected():
 	connected = false
+	get_tree().network_peer = null
 	print("Disconnected from: ",current_ip,":",current_port)
 	current_ip = ""
 	current_port = 0
@@ -73,13 +84,14 @@ puppet func server_response(version:float,host_nickname:String):
 	print("Server accepted connection.")
 	print("Host nickname: ",host_nickname)
 	print("Server version: ",version," Client version: ",main.version)
-	if disconnect_on_version_mismatch:
-		disconnect_from_server()
-	else:
-		emit_signal("gui_alert",
-		"Server version is: "+String(version)+" client is: "+String(main.version)+\
-		"\nThis might cause major issues (including project file corruption).",
-		"WARNING")
+	if version != main.version:
+		if disconnect_on_version_mismatch:
+			disconnect_from_server()
+		else:
+			emit_signal("gui_alert",
+			"Server version is: "+String(version)+" client is: "+String(main.version)+\
+			"\nThis might cause major issues (including project file corruption).",
+			"WARNING")
 
 
 
