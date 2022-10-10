@@ -25,6 +25,7 @@ func _ready():
 		main = null
 		return
 	
+	_on_nick_input_text_changed(nickname_input.text)
 	main.client.connect("disconnected",self,"_disconnected")
 	$tabs.tab_server.get_node("vbox/serverOptions/btn_stop_server").connect("pressed",main.server,"stop_server")
 	

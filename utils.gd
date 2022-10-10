@@ -22,6 +22,7 @@ var permissions = {
 	LEVEL_EDITOR:[1,2,3],
 }
 
+var projectPath = ProjectSettings.globalize_path("res://")
 var rng = RandomNumberGenerator.new()
 
 func random(from:float,to:float,to_int:bool=true):
@@ -44,6 +45,15 @@ func get_node_from_array(array:Array,name:String) -> Object:
 		
 	return null
 
+func get_properties(object:Object) -> Dictionary:
+	var r = {}
+	var list = object.get_property_list()
+	for data in list:
+		var name = data["name"]
+		r[name] = object.get(name)
+		
+	return r
+
 func get_descendants(node:Node,ignoredNodes:Array=[],allowed_classes=[]) -> Array:
 	if not is_inside_tree():
 		printerr("Utils not in scene tree! Use add_child")
@@ -52,7 +62,6 @@ func get_descendants(node:Node,ignoredNodes:Array=[],allowed_classes=[]) -> Arra
 	var _name = "descendants_"+node.name+String(rand_range(0,100))
 	node.propagate_call("add_to_group",[_name])
 	var r = get_tree().get_nodes_in_group(_name)
-	node.propagate_call("remove_from_group",[_name])
 	
 	if allowed_classes != []:
 		for i in r:
@@ -61,11 +70,23 @@ func get_descendants(node:Node,ignoredNodes:Array=[],allowed_classes=[]) -> Arra
 				if not(i is c):
 					check -= 1
 			if check == 0: r.erase(i)
-	
+
 	for i in ignoredNodes:
 		if i in r: r.remove(r.find(i))
 	
+	node.propagate_call("remove_from_group",[_name])
 	return r
+
+func is_inside_project(path:String) -> bool: #prevents accessing files outside project
+	if ".." in path:
+		printerr(".. is not allowed")
+		return false
+		
+	var globalized = ProjectSettings.globalize_path(path)
+	if not(globalized.begins_with(projectPath)):
+		return false
+	
+	return true
 
 func is_valid_url(url:String):
 	pass

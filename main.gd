@@ -13,8 +13,11 @@ var menuName = "Live Collaboration"
 const version:float = 1.0
 
 var nickname:String = "error"
+var plugin_dir = self.get_script().get_path().get_base_dir()
+
 
 func _enter_tree():
+	
 	self.name = "LiveCollaborationPlugin"
 	add_child(server)
 	add_child(client)
@@ -22,6 +25,7 @@ func _enter_tree():
 	add_child(utils)
 	
 	add_child(menu)
+	
 	add_tool_menu_item(menuName,self,"openMenu")
 
 	menu.connect("start_server",server,"start_server")
@@ -30,6 +34,13 @@ func _enter_tree():
 	
 	server.connect("gui_alert",menu,"alert")
 	client.connect("gui_alert",menu,"alert")
+	
+
+		
+	#for i in utils.get_descendants(get_editor_interface().get_parent()):
+		#print(i.get_script())
+
+	
 
 
 func _exit_tree():

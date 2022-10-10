@@ -78,6 +78,7 @@ func _disconnected():
 	print("Disconnected from: ",current_ip,":",current_port)
 	current_ip = ""
 	current_port = 0
+	main.editor_events.remove_all_markers()
 	emit_signal("disconnected")
 
 #####################################################################
@@ -97,8 +98,12 @@ puppet func server_response(version:float,host_nickname:String,color:Color,id:in
 			"\nThis might cause major issues (including project file corruption).",
 			"WARNING")
 
-remote func update_self(currentScene,mousePos:Vector2,cameraPos:Vector3):
-	pass
+puppet func store_file(path:String,buffer:PoolByteArray):
+	var f = File.new()
+	f.open(path,f.WRITE)
+	f.store_buffer(buffer)
+
+
 
 
 

@@ -92,6 +92,7 @@ tab_align = 0
 script = ExtResource( 3 )
 
 [node name="Join or host" type="Tabs" parent="tabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -109,7 +110,7 @@ anchor_bottom = 1.0
 focus_mode = 2
 
 [node name="vbox" type="VBoxContainer" parent="tabs/Join or host/scroll"]
-margin_right = 833.0
+margin_right = 845.0
 margin_bottom = 507.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -509,20 +510,20 @@ focus_mode = 2
 alignment = 1
 
 [node name="btn_stop_server" type="Button" parent="tabs/server/vbox/serverOptions"]
-margin_left = 239.0
-margin_right = 323.0
+margin_left = 250.0
+margin_right = 334.0
 margin_bottom = 24.0
 text = "Stop server"
 
 [node name="btn_set_password" type="Button" parent="tabs/server/vbox/serverOptions"]
-margin_left = 327.0
-margin_right = 423.0
+margin_left = 338.0
+margin_right = 434.0
 margin_bottom = 24.0
 text = "Set password"
 
 [node name="ch_aproval" type="CheckButton" parent="tabs/server/vbox/serverOptions"]
-margin_left = 427.0
-margin_right = 605.0
+margin_left = 438.0
+margin_right = 594.0
 margin_bottom = 24.0
 hint_tooltip = "If enabled, joining users will require your acceptation to let them join."
 disabled = true
@@ -875,7 +876,6 @@ icon = ExtResource( 12 )
 expand_icon = true
 
 [node name="info" type="Tabs" parent="tabs"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -903,7 +903,7 @@ align = 1
 margin_top = 43.0
 margin_right = 845.0
 margin_bottom = 82.0
-text = "version 0.0
+text = "version 1.0
 by Wolfyxon"
 align = 1
 
@@ -920,23 +920,43 @@ text = "https://github.com/Wolfyxon/godot-live-collaboration"
 script = ExtResource( 6 )
 copy_text = true
 
-[node name="warning" type="VBoxContainer" parent="tabs/info/vbox"]
+[node name="info" type="VBoxContainer" parent="tabs/info/vbox"]
 margin_top = 104.0
 margin_right = 845.0
-margin_bottom = 239.0
+margin_bottom = 378.0
 
-[node name="Label" type="Label" parent="tabs/info/vbox/warning"]
+[node name="Label2" type="Label" parent="tabs/info/vbox/info"]
 margin_right = 845.0
 margin_bottom = 31.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "Info"
+align = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="tabs/info/vbox/info"]
+margin_top = 35.0
+margin_right = 845.0
+margin_bottom = 135.0
+rect_min_size = Vector2( 0, 100 )
+bbcode_enabled = true
+bbcode_text = "This plugin is still in development. There's a risk of your project getting corrupted, so make sure to always back up your project before editing.
+Users can edit ALL scripts and project settings, that means everyone can run malicous code on each other users' machine.
+If you find an exploit or corruption bug report it immidiately on GitHub issues."
+text = "This plugin is still under construction."
+
+[node name="Label" type="Label" parent="tabs/info/vbox/info"]
+margin_top = 139.0
+margin_right = 845.0
+margin_bottom = 170.0
 custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
 custom_fonts/font = SubResource( 8 )
 text = "WARNING"
 align = 1
 
-[node name="RichTextLabel" type="RichTextLabel" parent="tabs/info/vbox/warning"]
-margin_top = 35.0
+[node name="RichTextLabel" type="RichTextLabel" parent="tabs/info/vbox/info"]
+margin_top = 174.0
 margin_right = 845.0
-margin_bottom = 135.0
+margin_bottom = 274.0
 rect_min_size = Vector2( 0, 100 )
 bbcode_enabled = true
 bbcode_text = "This plugin is still in development. There's a risk of your project getting corrupted, so make sure to always back up your project before editing.
