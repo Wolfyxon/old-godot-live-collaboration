@@ -12,16 +12,19 @@ signal user_disconnected
 
 onready var network = NetworkedMultiplayerENet.new()
 
-var pending_connection = []
+var host_nickname = ""
+var server_password = ""
+#var pending_connection = []
 var connected = []
 
 onready var main = get_parent()
+onready var client = main.client
+onready var menu = main.menu
 
 func _ready():
 	network.connect("peer_connected",self,"_user_connected")
 	network.connect("peer_disconnected",self,"_user_disconnected")
 	
-
 var server_running = false
 func start_server(port:int,max_users:int,password:String="",manual_join_aproval=false):
 	if server_running:
@@ -29,6 +32,7 @@ func start_server(port:int,max_users:int,password:String="",manual_join_aproval=
 		return
 	var err = network.create_server(port,max_users)
 	if err == OK:
+		server_password = password
 		get_tree().network_peer = network
 		print("Server started at port: ",port)
 		print("Max users: ",max_users)
@@ -40,21 +44,80 @@ func start_server(port:int,max_users:int,password:String="",manual_join_aproval=
 		emit_signal("gui_alert","Something might be already using this port, try changing it.\nError code: "+String(err),"Server start failed")
 		
 func stop_server():
+	if not network: return
+	if not server_running: return
 	print("Server stopped")
+	for i in get_connected_ids():
+		kick(i,"Server stopped by host.")
+	yield(get_tree(),"idle_frame")
 	network.close_connection()
 	server_running = false
 	emit_signal("server_stopped")
 
-remote func register_client(info):
-	var id = get_tree().get_rpc_sender_id()
-	connected.append({"id":id})
-	
-remote func server_message(message:String,title:String=""):
-	main.menu.alert(message,title)
+func get_connected_ids():
+	var r = []
+	for i in connected:
+		r.append(i["id"])
+	return r
 
+func get_user_by_id(id:int):
+	for i in connected:
+		if i["id"] == id:
+			return i
+	return
+
+func get_user_by_nickname(nickname:String):
+	for i in connected:
+		if i["nickname"] == nickname:
+			return i
+	return
+	
+func kick(id:int,reason:String=""):
+	if reason != "": 
+		rpc_id(id,"server_message",reason,"You have been kicked")
+		yield(get_tree(),"idle_frame")
+	network.disconnect_peer(id,true)
+	print("Kicked: ",id," Reason: ",reason)
+
+remote func auth_client(nickname:String,password:String=""):
+	var id = get_tree().get_rpc_sender_id()
+	var message_title = "Server rejected connection"
+	var error = null
+	if get_user_by_id(id):
+		error = "Someone is already logged on that ID."
+	if get_user_by_nickname(nickname):
+		error = "Someone is already using this nickname."
+	if server_password != "":
+		if password != server_password:
+			error = "Invalid password"
+	if not(error):
+		var data = {
+			"id":id,
+			"ip":network.get_peer_address(id),
+			"nickname":nickname
+		}
+		connected.append(data)
+		print(connected)
+		print("User authenticated: ",data)
+		client.rpc_id(id,"server_response",main.version,host_nickname)
+	else:
+		yield(get_tree(),"idle_frame")
+		kick(id,error)
+	
+
+remote func server_message(message:String,title:String="Server message"):
+	main.menu.alert(message,title)
+	
 func _user_connected(id):
-	rpc_id(int(id),"server_message","hello there")
-	pass
+	print(network.get_peer_address(id)," connected with ID: ",id)
+	yield(get_tree().create_timer(3),"timeout")
+	if not get_user_by_id(id):
+		print(network.get_peer_address(id)," kicked because of no authentication")
+		kick(id,"Auth timed out.")
 	
 func _user_disconnected(id):
-	pass
+	var data = get_user_by_id(id)
+	print("user: ",data," disconnected")
+	if data and data in connected:
+		connected.erase(data)
+	

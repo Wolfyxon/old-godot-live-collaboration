@@ -1,6 +1,10 @@
 tool
 extends GridContainer
 
+signal kick
+signal ban
+signal user_log
+
 var utils = preload("../../utils.gd").new()
 
 onready var key_columns = [
@@ -25,9 +29,9 @@ var rows = []
 
 func _ready():
 	for i in template_columns: i.visible = false
+	$_permission.disabled = true
 
-
-func add_row(id,nickname,ip,lvl):
+func add_row(id:int,nickname:String,ip:String,lvl:int):
 	var clms = [] #id,nick,ip,perm,log,kick,ban
 	for i in template_columns:
 		var d = i.duplicate()
@@ -54,6 +58,17 @@ func add_row(id,nickname,ip,lvl):
 		i.set_meta("nickname",nickname)
 		i.visible = true
 		
+func log_button(button:Button):
+	emit_signal("user_log",button.get_meta("id"))
+func kick_button(button:Button):
+	emit_signal("kick",button.get_meta("id"))
+func ban_button(button:Button):
+	emit_signal("ban",button.get_meta("id"))
+
+func delete_row(id:int):
+	for i in get_children():
+		if i.name.beginsWith(String(id)+"_"):
+			i.queue_free()
 	
 func get_columns():
 	var r = get_children()

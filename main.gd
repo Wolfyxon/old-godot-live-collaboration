@@ -7,6 +7,8 @@ var client = preload("networking/client.gd").new()
 var menu = preload("gui/menu.tscn").instance()
 var menuName = "Live Collaboration"
 
+const version:float = 1.0
+
 func _enter_tree():
 	self.name = "LiveCollaborationPlugin"
 	add_child(server)
@@ -17,7 +19,7 @@ func _enter_tree():
 
 	menu.connect("start_server",server,"start_server")
 	menu.connect("connect_to_server",client,"connect_to_server")
-	menu.connect("disconnect_from_server",client,"connect_to_server")
+	menu.connect("disconnect_from_server",client,"disconnect_from_server")
 	
 	server.connect("gui_alert",menu,"alert")
 	client.connect("gui_alert",menu,"alert")

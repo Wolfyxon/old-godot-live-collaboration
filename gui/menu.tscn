@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://addons/GdLiveCollaboration/guiTheme.tres" type="Theme" id=1]
 [ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/menu.gd" type="Script" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/joinRequestsList.gd" type="Script" id=13]
 [ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/nodeMods/checkBox.gd" type="Script" id=14]
 [ext_resource path="res://addons/GdLiveCollaboration/utils.gd" type="Script" id=15]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/progress_dialog.gd" type="Script" id=16]
 
 [sub_resource type="DynamicFont" id=7]
 size = 12
@@ -22,6 +23,9 @@ font_data = ExtResource( 7 )
 
 [sub_resource type="DynamicFont" id=3]
 font_data = ExtResource( 7 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.137255, 0.133333, 0.27451, 1 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 42
@@ -47,6 +51,12 @@ font_data = ExtResource( 7 )
 font_data = ExtResource( 7 )
 
 [sub_resource type="DynamicFont" id=1]
+
+[sub_resource type="DynamicFont" id=11]
+size = 15
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 7 )
 
 [node name="menu" type="AcceptDialog"]
 visible = true
@@ -82,7 +92,6 @@ tab_align = 0
 script = ExtResource( 3 )
 
 [node name="Join or host" type="Tabs" parent="tabs"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -100,15 +109,15 @@ anchor_bottom = 1.0
 focus_mode = 2
 
 [node name="vbox" type="VBoxContainer" parent="tabs/Join or host/scroll"]
-margin_right = 845.0
-margin_bottom = 481.0
+margin_right = 833.0
+margin_bottom = 507.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="nick" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox"]
 margin_right = 833.0
-margin_bottom = 50.0
+margin_bottom = 76.0
 focus_mode = 2
 
 [node name="Label" type="Label" parent="tabs/Join or host/scroll/vbox/nick"]
@@ -128,6 +137,14 @@ max_length = 20
 clear_button_enabled = true
 placeholder_text = "Da epic cool guy 2137"
 
+[node name="error" type="Label" parent="tabs/Join or host/scroll/vbox/nick"]
+margin_top = 54.0
+margin_right = 833.0
+margin_bottom = 76.0
+focus_mode = 2
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+align = 1
+
 [node name="Label" type="Label" parent="tabs/Join or host/scroll/vbox"]
 visible = false
 margin_top = 60.0
@@ -137,9 +154,9 @@ focus_mode = 2
 custom_styles/normal = ExtResource( 4 )
 
 [node name="start" type="HBoxContainer" parent="tabs/Join or host/scroll/vbox"]
-margin_top = 54.0
+margin_top = 80.0
 margin_right = 833.0
-margin_bottom = 377.0
+margin_bottom = 403.0
 focus_mode = 2
 
 [node name="join" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
@@ -317,6 +334,7 @@ Your project might also corrupt."
 margin_top = 245.0
 margin_right = 403.0
 margin_bottom = 269.0
+disabled = true
 text = "Manual join aproval [recommended]"
 
 [node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
@@ -335,9 +353,9 @@ disabled = true
 text = "Start server"
 
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox"]
-margin_top = 381.0
+margin_top = 407.0
 margin_right = 833.0
-margin_bottom = 481.0
+margin_bottom = 507.0
 rect_min_size = Vector2( 0, 100 )
 focus_mode = 2
 
@@ -367,6 +385,7 @@ align = 1
 script = ExtResource( 15 )
 
 [node name="client" type="Tabs" parent="tabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -506,22 +525,24 @@ margin_left = 427.0
 margin_right = 605.0
 margin_bottom = 24.0
 hint_tooltip = "If enabled, joining users will require your acceptation to let them join."
+disabled = true
 text = "Manual join aproval"
 
-[node name="Label" type="Label" parent="tabs/server/vbox"]
+[node name="btn_requests" type="Button" parent="tabs/server/vbox"]
 margin_top = 81.0
 margin_right = 845.0
 margin_bottom = 103.0
-focus_mode = 2
-text = "Connected users:"
-
-[node name="btn_requests" type="Button" parent="tabs/server/vbox"]
-margin_top = 107.0
-margin_right = 845.0
-margin_bottom = 129.0
+disabled = true
 text = "Show join requests (0)"
 script = ExtResource( 8 )
 visibility_switch = NodePath("../../popup_join_requests")
+
+[node name="Label" type="Label" parent="tabs/server/vbox"]
+margin_top = 107.0
+margin_right = 845.0
+margin_bottom = 129.0
+focus_mode = 2
+text = "Connected users:"
 
 [node name="people" type="ScrollContainer" parent="tabs/server/vbox"]
 margin_top = 133.0
@@ -530,6 +551,7 @@ margin_bottom = 438.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_styles/bg = SubResource( 10 )
 
 [node name="columns" type="GridContainer" parent="tabs/server/vbox/people"]
 margin_right = 845.0
@@ -605,7 +627,7 @@ text = "."
 [node name="_id" type="Label" parent="tabs/server/vbox/people/columns"]
 visible = false
 margin_top = 22.0
-margin_right = 99.0
+margin_right = 117.0
 margin_bottom = 44.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -613,9 +635,9 @@ text = "0"
 
 [node name="_nick" type="Label" parent="tabs/server/vbox/people/columns"]
 visible = false
-margin_left = 100.0
+margin_left = 121.0
 margin_top = 22.0
-margin_right = 213.0
+margin_right = 238.0
 margin_bottom = 44.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -623,9 +645,8 @@ text = "Da epic cool guy"
 
 [node name="_ip" type="MenuButton" parent="tabs/server/vbox/people/columns"]
 visible = false
-margin_left = 217.0
 margin_top = 22.0
-margin_right = 313.0
+margin_right = 117.0
 margin_bottom = 44.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -633,41 +654,48 @@ text = "< show >"
 
 [node name="_permission" type="OptionButton" parent="tabs/server/vbox/people/columns"]
 visible = false
-margin_left = 317.0
+margin_left = 363.0
 margin_top = 22.0
-margin_right = 432.0
+margin_right = 480.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
+disabled = true
 text = "host"
 items = [ "host", null, false, 2, null, "admin", null, false, 1, null, "editor", null, false, 0, null ]
 selected = 0
 
 [node name="_log" type="Button" parent="tabs/server/vbox/people/columns"]
 visible = false
-margin_left = 436.0
+margin_left = 484.0
 margin_top = 22.0
-margin_right = 532.0
+margin_right = 601.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
+disabled = true
 text = "View log"
+script = ExtResource( 8 )
 
 [node name="_kick" type="Button" parent="tabs/server/vbox/people/columns"]
 visible = false
-margin_left = 536.0
+margin_left = 605.0
 margin_top = 22.0
-margin_right = 632.0
+margin_right = 722.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 text = "Disconnect"
+script = ExtResource( 8 )
 
 [node name="_ban" type="Button" parent="tabs/server/vbox/people/columns"]
 visible = false
-margin_left = 636.0
+margin_left = 726.0
 margin_top = 22.0
-margin_right = 732.0
+margin_right = 843.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
+disabled = true
 text = "Ban"
+script = ExtResource( 8 )
+use_child_as_visibility_switch = false
 
 [node name="cover" type="ColorRect" parent="tabs/server"]
 visible = false
@@ -950,8 +978,56 @@ margin_bottom = 34.0
 theme = ExtResource( 1 )
 dialog_autowrap = true
 
+[node name="editor_warning" type="Label" parent="Node"]
+visible = false
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+rect_min_size = Vector2( 0, 40 )
+text = "WARNING: You are running the menu in editor!"
+align = 1
+
+[node name="progress_dialog" type="PopupDialog" parent="Node"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -215.5
+margin_top = -37.5
+margin_right = 215.5
+margin_bottom = 37.5
+theme = ExtResource( 1 )
+popup_exclusive = true
+script = ExtResource( 16 )
+
+[node name="ProgressBar" type="ProgressBar" parent="Node/progress_dialog"]
+visible = false
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -7.0
+margin_bottom = 7.0
+
+[node name="progress_label" type="Label" parent="Node/progress_dialog"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -11.0
+margin_bottom = 11.0
+text = "Please wait..."
+align = 1
+
+[node name="title" type="Label" parent="Node/progress_dialog"]
+anchor_right = 1.0
+margin_bottom = 30.0
+custom_fonts/font = SubResource( 11 )
+text = "Title"
+align = 1
+
 [connection signal="text_changed" from="tabs/Join or host/scroll/vbox/nick/nick_input" to="." method="_on_nick_input_text_changed"]
 [connection signal="pressed" from="tabs/Join or host/scroll/vbox/start/join/btn_join" to="." method="_on_btn_join_pressed"]
 [connection signal="pressed" from="tabs/Join or host/scroll/vbox/start/host/btn_start" to="." method="_on_btn_start_pressed"]
 [connection signal="pressed" from="tabs/client/vbox/actions/btn_disconnect" to="." method="_on_btn_disconnect_pressed"]
+[connection signal="kick" from="tabs/server/vbox/people/columns" to="." method="_on_columns_kick"]
 [connection signal="requests_changed" from="tabs/server/popup_join_requests/scroll/join_requests" to="tabs" method="_on_join_requests_requests_changed"]
