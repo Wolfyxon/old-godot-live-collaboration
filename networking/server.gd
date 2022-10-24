@@ -34,16 +34,12 @@ var colors = [
 	Color.purple,
 	Color.magenta
 ]
-var color_alpha = 0.5
 
 func _ready():
 	network.connect("peer_connected",self,"_user_connected")
 	network.connect("peer_disconnected",self,"_user_disconnected")
 	name = "server"
 	
-	
-	for i in colors:
-		colors[i].a = color_alpha
 
 func add_host_to_list():
 	var data = {"id":0,"nickname":host_nickname,"ip":"127.0.0.1"}
@@ -82,6 +78,7 @@ func stop_server():
 	server_running = false
 	connected = []
 	main.editor_events.remove_all_markers()
+	get_tree().network_peer = null
 	emit_signal("server_stopped")
 
 func get_connected_ids(include_host:bool=false):

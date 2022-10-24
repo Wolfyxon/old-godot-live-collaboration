@@ -77,11 +77,10 @@ func get_descendants(node:Node,ignoredNodes:Array=[],allowed_classes=[]) -> Arra
 	node.propagate_call("remove_from_group",[_name])
 	return r
 
-func is_inside_project(path:String) -> bool: #prevents accessing files outside project
+func is_file_in_project(path:String) -> bool: #prevents accessing files outside project
 	if ".." in path:
-		printerr(".. is not allowed")
-		return false
-		
+		path = ProjectSettings.localize_path(path)
+
 	var globalized = ProjectSettings.globalize_path(path)
 	if not(globalized.begins_with(projectPath)):
 		return false
@@ -94,4 +93,6 @@ func is_valid_url(url:String):
 	if not("." in url): return false
 	
 	return true
-	
+
+func get_resources_of_scene(scene_path:String):
+	pass

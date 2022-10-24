@@ -11,5 +11,6 @@ func set_nickname(nickname:String):
 	$Viewport/nickname.text = nickname
 
 func set_color(color:Color):
+	color.a = 0.5
 	$main.get_active_material(0).albedo_color = color
-	
+

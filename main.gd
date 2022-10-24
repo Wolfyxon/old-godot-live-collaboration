@@ -15,9 +15,7 @@ const version:float = 1.0
 var nickname:String = "error"
 var plugin_dir = self.get_script().get_path().get_base_dir()
 
-
 func _enter_tree():
-	
 	self.name = "LiveCollaborationPlugin"
 	add_child(server)
 	add_child(client)

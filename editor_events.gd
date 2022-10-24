@@ -1,5 +1,6 @@
 tool
 extends Node
+#https://docs.godotengine.org/en/stable/classes/class_editorinterface.html
 
 signal property_changed
 signal node_added
@@ -7,8 +8,6 @@ signal node_removed
 
 var utils = preload("utils.gd").new()
 onready var tmr_check_properties = Timer.new()
-
-#https://docs.godotengine.org/en/stable/classes/class_editorinterface.html
 
 onready var main:EditorPlugin = get_parent()
 var editor_interface:EditorInterface
@@ -19,7 +18,7 @@ func _init(_editor_interface:EditorInterface):
 func _ready():
 	add_child(utils)
 	add_child(tmr_check_properties)
-	tmr_check_properties.wait_time = 0.1
+	tmr_check_properties.wait_time = 0.05
 	tmr_check_properties.one_shot = false
 	tmr_check_properties.connect("timeout",self,"_property_check")
 	tmr_check_properties.start()
@@ -31,7 +30,9 @@ func _ready():
 	get_tree().connect("node_removed",self,"_node_removed")
 	
 	connect("property_changed",self,"_on_property_changed")
-	
+
+######################################################
+
 
 func get_root():
 	return get_editor_interface().get_node("/")
@@ -51,17 +52,19 @@ func get_edited_scene():
 func get_editor_interface():
 	return editor_interface
 
-func _node_added(node:Node):
-	emit_signal("node_added",node)
+func is_in_current_scene(node:Node):
+	var scene =  editor_interface.get_edited_scene_root()
+	if not scene: return
+	var path = scene.get_path_to(node)
+	if not String(node.get_path()).begins_with(String(scene.get_path())): return false
+	if ".." in String(path): return false
+	if not(scene.has_node(path)): return false
 	
-func _node_removed(node:Node):
-	emit_signal("node_removed",node)
-	
+	return true
 
 func _on_property_changed(node:Node,key:String,value,scene_path:String):
-	if not main.server.server_running: rpc_id(1,"set_property",node.get_path(),key,value,scene_path)
 	rpc("set_property",node.get_path(),key,value,scene_path)
-	
+
 var cached_properties = {}
 func _property_check():
 	var t = Thread.new()
@@ -92,10 +95,23 @@ func _property_check_(): #run this always with thread!
 			cached_properties[node] = properties
 
 
+
+func _node_added(node:Node):
+	if not is_in_current_scene(node): return
+	emit_signal("node_added",node,utils.get_properties(node))
+	
+	if get_tree().network_peer:
+		if not main.server.server_running: rpc_id(1,"create_node",node)
+		rpc("create_node",node)
+	
+func _node_removed(node:Node):
+	if not is_in_current_scene(node): return
+	emit_signal("node_removed",node)
+
 ################################################################################
 # NETWORK ZONE
 
-remotesync func set_property(path:NodePath,property:String,value,scene_path:String=""):
+remotesync func set_property(path:NodePath,property:String,value,scene_path:String="",requireReload:bool=false):
 	var id = get_tree().get_rpc_sender_id()
 	if scene_path != "":
 		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
@@ -105,6 +121,20 @@ remotesync func set_property(path:NodePath,property:String,value,scene_path:Stri
 	var node = get_node(path)
 	if node:
 		node.set(property,value)
+
+remotesync func create_node(node_class:String,parent_path:NodePath,scene:String,properties:Dictionary={},name:String=""):
+	if not ClassDB.is_class(node_class): 
+		printerr("Invalid class: ",node_class)
+		return
+	if editor_interface.get_edited_scene_root().filename != scene: return
+	if not get_node(parent_path): return
+	
+	var node = ClassDB.instance(node_class)
+	
+
+
+remotesync func delete_node(path:NodePath,scene:String):
+	var node = get_node(path)
 
 ########### markers
 var marker_group_name = "LiveCollaboration_client_marker"
@@ -204,6 +234,5 @@ remote func move_cursor_marker(pos:Vector2):
 
 func _property_edited(property:String):
 	var nodes = editor_interface.get_selection().get_selected_nodes()
-
 
 
