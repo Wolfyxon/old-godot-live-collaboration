@@ -8,7 +8,7 @@ func _ready():
 		i.set_meta("_edit_lock_", true)
 
 func set_nickname(nickname:String):
-	$Viewport/nickname.text = nickname
+	$nickname.text = nickname
 
 func set_color(color:Color):
 	color.a = 0.5
