@@ -3,7 +3,6 @@ extends EditorPlugin
 
 var server = preload("networking/server.gd").new()
 var client = preload("networking/client.gd").new()
-
 var utils = preload("utils.gd").new()
 var editor_events = preload("editor_events.gd").new(get_editor_interface())
 
@@ -21,7 +20,6 @@ func _enter_tree():
 	add_child(client)
 	add_child(editor_events)
 	add_child(utils)
-	
 	add_child(menu)
 	
 	add_tool_menu_item(menuName,self,"openMenu")
@@ -32,6 +30,7 @@ func _enter_tree():
 	
 	server.connect("gui_alert",menu,"alert")
 	client.connect("gui_alert",menu,"alert")
+	#editor_events.connect("gui_alert",menu,"alert")
 	
 
 		

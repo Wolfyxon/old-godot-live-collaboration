@@ -5,12 +5,16 @@ extends Node
 signal property_changed
 signal node_added
 signal node_removed
+signal gui_alert
+signal script_edited
 
 var utils = preload("utils.gd").new()
 onready var tmr_check_properties = Timer.new()
+onready var tmr_check_script = Timer.new()
 
 onready var main:EditorPlugin = get_parent()
 var editor_interface:EditorInterface
+var script_text_editor: TextEdit
 
 func _init(_editor_interface:EditorInterface):
 	editor_interface = _editor_interface
@@ -23,6 +27,12 @@ func _ready():
 	tmr_check_properties.connect("timeout",self,"_property_check")
 	tmr_check_properties.start()
 	
+	add_child(tmr_check_script)
+	tmr_check_script.wait_time = 0.05
+	tmr_check_script.one_shot = false
+	tmr_check_script.connect("timeout",self,"_script_check")
+	tmr_check_script.start()
+	
 	editor_interface.get_inspector().connect("property_edited",self,"_property_edited")
 	editor_interface.get_inspector().connect("object_id_selected",self,"_node_selected")
 	
@@ -30,9 +40,18 @@ func _ready():
 	get_tree().connect("node_removed",self,"_node_removed")
 	
 	connect("property_changed",self,"_on_property_changed")
-
 ######################################################
+	
 
+
+func get_script_text_editor():
+	var list = utils.get_descendants(editor_interface.get_script_editor())
+	var containers = []
+	for c in list:
+		if c.get_class() == "CodeTextEditor":
+			for ch in c.get_children():
+				if (ch is TextEdit) and ch.is_visible_in_tree():
+					return ch
 
 func get_root():
 	return get_editor_interface().get_node("/")
@@ -94,6 +113,56 @@ func _property_check_(): #run this always with thread!
 		else:
 			cached_properties[node] = properties
 
+var cached_scripts = {
+	#path: code
+}
+var ignored_scripts = []
+
+func _script_changed():
+	print("change")
+	emit_signal("script_edited",editor_interface.get_script_editor().get_current_script().resource_path)
+
+func _script_check():
+	script_text_editor = get_script_text_editor()
+	if not script_text_editor: return
+	
+	var script = editor_interface.get_script_editor().get_current_script()
+	#prints("path",script.resource_path)
+	
+	if utils.is_script_builtin(script): #TODO: support for local scripts
+		var _name = "gdlc_script_warn"
+		if script_text_editor.has_node(_name): return
+		var lbl = Label.new()
+		lbl.owner = self
+		lbl.name = _name
+		lbl.text = "WARNING: This script is built-in to scene and it will NOT be replicated to other collaborators. Feature comming soon"
+		lbl.modulate = Color.yellow
+		script_text_editor.add_child(lbl)
+		return
+		
+	if not script_text_editor.is_connected("text_changed",self,"_script_changed"):
+		script_text_editor.connect("text_changed",self,"_script_changed")
+	
+#	var editor = editor_interface.get_script_editor()
+#	if not editor: return
+#	var script = editor.get_current_script()
+#	if not script: return
+#	if script in ignored_scripts: return
+#	if script.resource_local_to_scene:
+#		ignored_scripts.append(script)
+#		emit_signal("gui_alert","This script is local to scene and will NOT be replicated to other collaborators.")
+#		return
+#
+#	var src = script.source_code
+#	var path = script.resource_path
+#	if path == "": return
+#
+#	if not(path in cached_scripts): 
+#		cached_scripts[path] = src
+#		return
+#	if cached_scripts[path] != src:
+#		emit_signal("script_edited",path,src)
+#		cached_scripts[path] = src
 
 
 func _node_added(node:Node):

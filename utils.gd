@@ -77,6 +77,9 @@ func get_descendants(node:Node,ignoredNodes:Array=[],allowed_classes=[]) -> Arra
 	node.propagate_call("remove_from_group",[_name])
 	return r
 
+func is_script_builtin(script:GDScript):
+	return ("::" in script.resource_path)
+
 func is_file_in_project(path:String) -> bool: #prevents accessing files outside project
 	if ".." in path:
 		path = ProjectSettings.localize_path(path)
