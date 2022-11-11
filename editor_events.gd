@@ -130,14 +130,18 @@ func _script_check():
 	#prints("path",script.resource_path)
 	
 	if utils.is_script_builtin(script): #TODO: support for local scripts
+		var tmp = script_text_editor.get_parent().get_parent().get_parent()
 		var _name = "gdlc_script_warn"
-		if script_text_editor.has_node(_name): return
+		if tmp.has_node(_name): 
+			return
+		script_text_editor.rect_clip_content = false
 		var lbl = Label.new()
-		lbl.owner = self
 		lbl.name = _name
 		lbl.text = "WARNING: This script is built-in to scene and it will NOT be replicated to other collaborators. Feature comming soon"
-		lbl.modulate = Color.yellow
-		script_text_editor.add_child(lbl)
+		lbl.add_color_override("font_color",Color.yellow)
+		main.remove_with_self.append(lbl)
+		tmp.add_child(lbl)
+		
 		return
 		
 	if not script_text_editor.is_connected("text_changed",self,"_script_changed"):

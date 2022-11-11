@@ -14,6 +14,8 @@ const version:float = 1.0
 var nickname:String = "error"
 var plugin_dir = self.get_script().get_path().get_base_dir()
 
+var remove_with_self = []
+
 func _enter_tree():
 	self.name = "LiveCollaborationPlugin"
 	add_child(server)
@@ -32,18 +34,21 @@ func _enter_tree():
 	client.connect("gui_alert",menu,"alert")
 	#editor_events.connect("gui_alert",menu,"alert")
 	
-
-		
+	for i in utils.get_descendants(get_editor_interface().get_script_editor()):
+		if i is Control:
+			i.hint_tooltip = i.name +" "+i.get_path()
+	
 	#for i in utils.get_descendants(get_editor_interface().get_parent()):
 		#print(i.get_script())
-
-	
 
 
 func _exit_tree():
 	server.stop_server()
 	remove_tool_menu_item(menuName)
 	menu.free()
+	
+	for i in remove_with_self:
+		if i and is_instance_valid(i): i.queue_free()
 	
 func openMenu(data):
 	menu.popup_centered()
