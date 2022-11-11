@@ -33,10 +33,7 @@ func _enter_tree():
 	server.connect("gui_alert",menu,"alert")
 	client.connect("gui_alert",menu,"alert")
 	#editor_events.connect("gui_alert",menu,"alert")
-	
-	for i in utils.get_descendants(get_editor_interface().get_script_editor()):
-		if i is Control:
-			i.hint_tooltip = i.name +" "+i.get_path()
+
 	
 	#for i in utils.get_descendants(get_editor_interface().get_parent()):
 		#print(i.get_script())

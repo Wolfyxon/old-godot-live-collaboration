@@ -42,7 +42,9 @@ func _ready():
 	connect("property_changed",self,"_on_property_changed")
 ######################################################
 	
-
+func rpc_all(method:String,args:Array):
+	callv("rpc",[method]+args)
+	if not main.server.server_running: callv("rpc_id",[1,method]+args)
 
 func get_script_text_editor():
 	var list = utils.get_descendants(editor_interface.get_script_editor())
@@ -59,8 +61,9 @@ func get_root():
 func get_3d_camera():
 	var cam_index = 0
 	var e = editor_interface.get_editor_viewport()
-	var cam = e.get_child(1).get_child(1).get_child(0).get_child(0).get_child(cam_index).get_child(0).get_child(0).get_camera()
-	return cam
+	var tmp = e.get_child(1).get_child(1).get_child(0).get_child(0).get_child(cam_index).get_child(0).get_child(0)
+	if tmp.has_method("get_camera"): return tmp.get_camera()
+
 
 func get_2d_mouse_position() -> Vector2:
 	return editor_interface.get_viewport().get_mouse_position()
@@ -119,8 +122,7 @@ var cached_scripts = {
 var ignored_scripts = []
 
 func _script_changed():
-	print("change")
-	emit_signal("script_edited",editor_interface.get_script_editor().get_current_script().resource_path)
+	emit_signal("script_edited",editor_interface.get_script_editor().get_current_script().resource_path,editor_interface.get_script_editor().get_current_script().source_code)
 
 func _script_check():
 	script_text_editor = get_script_text_editor()
@@ -174,8 +176,8 @@ func _node_added(node:Node):
 	emit_signal("node_added",node,utils.get_properties(node))
 	
 	if get_tree().network_peer:
-		if not main.server.server_running: rpc_id(1,"create_node",node)
-		rpc("create_node",node)
+		#if not main.server.server_running: rpc_id(1,"create_node",node)
+		rpc_all("create_node",[node])
 	
 func _node_removed(node:Node):
 	if not is_in_current_scene(node): return
@@ -226,8 +228,10 @@ func _input(event):
 	if not(is_instance_valid(cursor_marker)): return
 	if not(is_instance_valid(camera_marker)): return
 	
-	camera_marker.translation = get_3d_camera().translation
-	camera_marker.rotation = get_3d_camera().rotation
+	var cam = get_3d_camera() 
+	if cam:
+		camera_marker.translation = cam.translation
+		camera_marker.rotation = cam.rotation
 	
 	if event is InputEventMouse:
 		#Mouse position looks different on other screens
@@ -235,11 +239,11 @@ func _input(event):
 		cursor_marker.global_position = get_editor_interface().get_base_control().get_global_mouse_position()
 	
 	if (prev_camera_pos != camera_marker.translation) or (prev_camera_rot != camera_marker.rotation):
-		rpc("move_camera_marker",camera_marker.translation,camera_marker.rotation)
-		if not main.server.server_running: rpc_id(1,"move_camera_marker",camera_marker.translation,camera_marker.rotation)
+		rpc_all("move_camera_marker",[camera_marker.translation,camera_marker.rotation])
+		#if not main.server.server_running: rpc_id(1,"move_camera_marker",camera_marker.translation,camera_marker.rotation)
 	if prev_cursor_pos != cursor_marker.position:
-		rpc("move_cursor_marker",cursor_marker.global_position)
-		if not main.server.server_running: rpc_id(1,"move_cursor_marker",cursor_marker.global_position)
+		rpc_all("move_cursor_marker",[cursor_marker.global_position])
+		#if not main.server.server_running: rpc_id(1,"move_cursor_marker",cursor_marker.global_position)
 	
 remote func remove_all_markers():
 	if not get_tree(): return
@@ -289,19 +293,19 @@ remote func move_camera_marker(pos:Vector3,rot:Vector3):
 	var m = get_camera_marker(id)
 	if not m: return
 	
-	rpc_id(1,"set_property",m.get_path(),"translation",pos)
-	rpc("set_property",m.get_path(),"translation",pos)
+	#rpc_id(1,"set_property",m.get_path(),"translation",pos)
+	rpc_all("set_property",[m.get_path(),"translation",pos])
 	
-	if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"rotation",rot)
-	rpc("set_property",m.get_path(),"rotation",rot)
+	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"rotation",rot)
+	rpc_all("set_property",[m.get_path(),"rotation",rot])
 
 remote func move_cursor_marker(pos:Vector2):
 	var id = get_tree().get_rpc_sender_id()
 	var m = get_cursor_marker(id)
 	if not m: return
 		
-	if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"global_position",pos)
-	rpc("set_property",m.get_path(),"global_position",pos)
+	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"global_position",pos)
+	rpc_all("set_property",[m.get_path(),"global_position",pos])
 
 ####################### nodes
 
