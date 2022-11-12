@@ -34,7 +34,6 @@ func _enter_tree():
 	client.connect("gui_alert",menu,"alert")
 	#editor_events.connect("gui_alert",menu,"alert")
 
-	
 	#for i in utils.get_descendants(get_editor_interface().get_parent()):
 		#print(i.get_script())
 

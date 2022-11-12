@@ -39,6 +39,21 @@ func has_permission(level,permission) -> bool:
 	if permission in permissions[level]: return true
 	return false
 
+func compare_dicts(a:Dictionary,b:Dictionary): # {"e":"e"} != {"e":"e"} for some reason
+	for key in a:
+		if not(key in b): return false
+	for key in b:
+		if not(key in a): return false
+	
+	for key in a:
+		if a[key] is Dictionary:
+			if not( compare_dicts(a[key],b[key]) ): 
+				return false
+		else:
+			if a[key] != b[key]: 
+				return false
+	return true
+
 func get_node_from_array(array:Array,name:String) -> Object:
 	for i in array:
 		if i.name == name: return i
