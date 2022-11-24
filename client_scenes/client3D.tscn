@@ -20,14 +20,14 @@ top_radius = 0.05
 bottom_radius = 0.0
 height = 2.513
 
-[node name="client3D" type="Spatial"]
+[node name="client3D" type="Spatial" groups=["gdlc_ignore"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00533557, 1.19209e-07, -0.00892258 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="main" type="MeshInstance" parent="."]
+[node name="main" type="MeshInstance" parent="." groups=["gdlc_ignore"]]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.00225246, 5.96046e-08, -0.000431597 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
@@ -35,13 +35,13 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="arrow" type="Spatial" parent="."]
+[node name="arrow" type="Spatial" parent="." groups=["gdlc_ignore"]]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -0.00866041 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="line" type="MeshInstance" parent="arrow"]
+[node name="line" type="MeshInstance" parent="arrow" groups=["gdlc_ignore"]]
 transform = Transform( -2.82072e-09, -0.0645306, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.100412, 0, 0.00860246 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 2 )
@@ -49,7 +49,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="head" type="MeshInstance" parent="arrow"]
+[node name="head" type="MeshInstance" parent="arrow" groups=["gdlc_ignore"]]
 transform = Transform( -2.01322e-09, -0.0460571, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.192936, 0, 0.00860246 )
 mesh = SubResource( 4 )
 material/0 = SubResource( 2 )
@@ -57,9 +57,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="nickname" type="Label3D" parent="."]
+[node name="nickname" type="Label3D" parent="." groups=["gdlc_ignore"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.254196, 0 )
 billboard = 1
 no_depth_test = true
 fixed_size = true
 text = "Nickname"
+__meta__ = {
+"_edit_lock_": true
+}

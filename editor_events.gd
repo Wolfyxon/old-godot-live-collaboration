@@ -19,6 +19,8 @@ onready var main:EditorPlugin = get_parent()
 var editor_interface:EditorInterface
 var script_text_editor: TextEdit
 
+var ignore_group = "gdlc_ignore" #don't touch
+
 func _init(_editor_interface:EditorInterface):
 	editor_interface = _editor_interface
 
@@ -93,7 +95,7 @@ func _on_property_list_changed(node:Node,properties:Dictionary,previous:={}):
 	var path = node.get_path()
 	for i in properties:
 		var value = node.get(i)
-		if value and not(value is Object): #TODO: support for objects
+		if value and not(value is Object): #TODO: encoding and decoding objects from dicts
 			rpc_all("set_property",[ path,i,properties[i],editor_interface.get_edited_scene_root().filename ])
 
 func _on_property_changed(node:Node,key:String,value,scene_path:String):
@@ -109,6 +111,7 @@ func _on_property_changed(node:Node,key:String,value,scene_path:String):
 var cached_properties = {}
 var scanning_properties = false
 func _property_check():
+	if not(main.server.server_running or main.client.connected): return
 	if not OS.is_window_focused(): return
 	_property_check_()
 	#if scanning_properties: return
@@ -118,30 +121,41 @@ func _property_check():
 func _property_check_(): #run this always with thread!
 	scanning_properties = true
 	var scene = editor_interface.get_edited_scene_root()
+	if not scene: return
 	var scene_path = scene.filename
 	var nodes = utils.get_descendants(scene)
 	for node in nodes:
-		var properties = utils.get_properties(node)
-		if node in cached_properties:
-			var cached = cached_properties[node]
-			if not(utils.compare_dicts(cached,properties)):
+		if is_instance_valid(node) and not(node.is_queued_for_deletion()) and not(node.is_in_group(ignore_group)):
+			if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
+			if not(node.get_path() in blocked_properties[scene_path]): blocked_properties[scene_path][node.get_path()] = []
+			var properties = utils.get_properties(node)
+			if node in cached_properties:
+				var cached = cached_properties[node]
+				if not(utils.compare_dicts(cached,properties)):
+					cached_properties[node] = properties
+					var ok = true
+					for key in properties:
+						if key in blocked_properties[scene_path][node.get_path()]:
+							ok = false
+							blocked_properties[scene_path].erase(node.get_path())
+							#break
+					if ok:
+						emit_signal("property_list_changed",node,properties,cached)
+				
+				#WARNING: for some reason when 2 properties are changed at the same time, only one will be detected
+	#			for key in properties:
+	#				var value = properties[key]
+	#				var cached_value = cached_properties[node][key]
+	#				if key in cached:
+	#					if value != cached_value:
+	#						emit_signal("property_changed",node,key,value,scene_path)
+	#						cached_properties[node] = properties
+	#				else:
+	#					cached_properties[node][key] = value
+	#					emit_signal("property_changed",node,key,value,scene_path)
+	#					cached_properties[node] = properties
+			else:
 				cached_properties[node] = properties
-				emit_signal("property_list_changed",node,properties,cached)
-			
-			#WARNING: for some reason when 2 properties are changed at the same time, only one will be detected
-#			for key in properties:
-#				var value = properties[key]
-#				var cached_value = cached_properties[node][key]
-#				if key in cached:
-#					if value != cached_value:
-#						emit_signal("property_changed",node,key,value,scene_path)
-#						cached_properties[node] = properties
-#				else:
-#					cached_properties[node][key] = value
-#					emit_signal("property_changed",node,key,value,scene_path)
-#					cached_properties[node] = properties
-		else:
-			cached_properties[node] = properties
 	scanning_properties = false
 	emit_signal("properties_scanned")
 
@@ -218,10 +232,10 @@ func _node_removed(node:Node):
 var blocked_properties = {
 	#scene_path: {node_path: [properties]}
 }
-remotesync func set_property(path:NodePath,property:String,value,scene_path:String="",requireReload:bool=false):	
-#	if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
-#	if not(path in blocked_properties[scene_path]): blocked_properties[scene_path][path] = []
-#	if property in blocked_properties[scene_path][path]: return 
+remotesync func set_property(path:NodePath,property:String,value,scene_path:String="",requireReload:bool=false):
+	if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
+	if not(path in blocked_properties[scene_path]): blocked_properties[scene_path][path] = []
+	#if property in blocked_properties[scene_path][path]: return 
 	var id = get_tree().get_rpc_sender_id()
 	if scene_path != "":
 		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
@@ -230,11 +244,12 @@ remotesync func set_property(path:NodePath,property:String,value,scene_path:Stri
 	
 	var node = get_node(path)
 	if node:
-		if node in cached_properties: cached_properties[node][property] = value
-#		blocked_properties[scene_path][path].append(property)
-#		yield(self,"properties_scanned")
+		#blocked_properties[scene_path][path].append(property)
+		if not(node in cached_properties): 
+			cached_properties[node] = utils.get_properties(node)
 		node.set(property,value)
-#		blocked_properties[scene_path][path].erase(property)
+		node.set_meta("gdlc_last_modified",[id,OS.get_unix_time()])
+		cached_properties[node][property] = value
 
 remotesync func create_node(node_class:String,parent_path:NodePath,scene:String,properties:Dictionary={},name:String=""):
 	if not ClassDB.is_class(node_class): 
