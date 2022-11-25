@@ -1,7 +1,6 @@
 tool
 extends Node
-#https://docs.godotengine.org/en/stable/classes/class_editorinterface.html
-
+#DO NOT MODIFY THIS SCRIPT WHILE THE PLUGIN IS RUNNING
 
 signal node_added
 signal node_removed
@@ -47,7 +46,35 @@ func _ready():
 	connect("property_changed",self,"_on_property_changed")
 	connect("property_list_changed",self,"_on_property_list_changed")
 ######################################################
+	#gui_highlight()
+	#clear_tooltips()
+	var tmp = editor_interface.get_script_editor().get_node("../../..").get_children()[0]
+	var btn = ToolButton.new()
+	main.remove_with_self.append(btn)
+	btn.disabled = true
+	btn.text = "Commit script changes"
+	btn.icon = load("res://addons/GdLiveCollaboration/textures/icons/green_check.png")
+	btn.hint_tooltip = "This is NOT availble yet, I need to create a system that will merge scripts to avoid overwriting someone's work.\nMark code as finished and send it to server"
+	tmp.add_child(btn)
+	tmp.move_child(btn,tmp.get_children().find(btn)-1)
 	
+	#tmp.add_child(btn)
+
+
+onready var tooltip_target = editor_interface.get_script_editor()
+func gui_highlight(): #used for finding certrain editor gui parts 
+	var nodes = utils.get_descendants(tooltip_target)
+	for i in nodes:
+		if i is Control:
+			i.hint_tooltip = i.name+" "+i.get_class()+"\n"+tooltip_target.get_path_to(i)
+
+func clear_tooltips():
+	var nodes = utils.get_descendants(tooltip_target)
+	for i in nodes:
+		if i is Control:
+			i.hint_tooltip = ""
+			
+
 func rpc_all(method:String,args:Array):
 	callv("rpc",[method]+args)
 	if not main.server.server_running: callv("rpc_id",[1,method]+args)

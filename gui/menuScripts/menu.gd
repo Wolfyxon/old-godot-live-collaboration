@@ -16,7 +16,6 @@ onready var host_menu = start_menu.get_node("host")
 onready var main = get_parent()
 onready var nickname_input = $tabs.tab_joinOrHost.get_node("scroll/vbox/nick/nick_input")
 
-
 func _ready():
 	if not Engine.editor_hint:
 		$Node/editor_warning.visible = true

@@ -99,7 +99,6 @@ tab_align = 0
 script = ExtResource( 3 )
 
 [node name="Join or host" type="Tabs" parent="tabs"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -117,8 +116,8 @@ anchor_bottom = 1.0
 focus_mode = 2
 
 [node name="vbox" type="VBoxContainer" parent="tabs/Join or host/scroll"]
-margin_right = 845.0
-margin_bottom = 475.0
+margin_right = 833.0
+margin_bottom = 503.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -172,12 +171,12 @@ text = "WARNING: This plugin may allow remote code execution on your machine so 
 [node name="start" type="HBoxContainer" parent="tabs/Join or host/scroll/vbox"]
 margin_top = 106.0
 margin_right = 833.0
-margin_bottom = 371.0
+margin_bottom = 399.0
 focus_mode = 2
 
 [node name="join" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
 margin_right = 402.0
-margin_bottom = 265.0
+margin_bottom = 293.0
 rect_pivot_offset = Vector2( -124.5, -4.5 )
 focus_mode = 2
 size_flags_horizontal = 3
@@ -255,14 +254,14 @@ text = "Join server"
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox/start"]
 margin_left = 406.0
 margin_right = 426.0
-margin_bottom = 265.0
+margin_bottom = 293.0
 rect_min_size = Vector2( 20, 75.01 )
 focus_mode = 2
 
 [node name="host" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
 margin_left = 430.0
 margin_right = 833.0
-margin_bottom = 265.0
+margin_bottom = 293.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -323,32 +322,42 @@ focus_mode = 2
 min_value = 1.0
 value = 5.0
 
-[node name="ch_aproval" type="CheckButton" parent="tabs/Join or host/scroll/vbox/start/host"]
+[node name="ch_aproval" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
 margin_top = 187.0
 margin_right = 403.0
 margin_bottom = 211.0
 disabled = true
 text = "Manual join aproval [recommended]"
 
-[node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
+[node name="ch_ngrok" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
 margin_top = 215.0
 margin_right = 403.0
 margin_bottom = 239.0
+hint_tooltip = "For info, see \"ngrok\" section in settings"
+disabled = true
+text = "Start ngrok"
+script = ExtResource( 14 )
+enabled_block = NodePath("../btn_start")
+
+[node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
+margin_top = 243.0
+margin_right = 403.0
+margin_bottom = 267.0
 text = "I understand the risk"
 script = ExtResource( 14 )
 enabled_block = NodePath("../btn_start")
 
 [node name="btn_start" type="Button" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 243.0
+margin_top = 271.0
 margin_right = 403.0
-margin_bottom = 265.0
+margin_bottom = 293.0
 disabled = true
 text = "Start server"
 
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox"]
-margin_top = 375.0
+margin_top = 403.0
 margin_right = 833.0
-margin_bottom = 475.0
+margin_bottom = 503.0
 rect_min_size = Vector2( 0, 100 )
 focus_mode = 2
 
@@ -868,6 +877,7 @@ icon = ExtResource( 12 )
 expand_icon = true
 
 [node name="settings" type="Tabs" parent="tabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
