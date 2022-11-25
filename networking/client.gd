@@ -22,7 +22,8 @@ var current_port = 0
 var used_password = ""
 var client_id = -1
 
-onready var main = get_parent()
+onready var main:EditorPlugin = get_parent()
+onready var editor_interface:EditorInterface = main.get_editor_interface()
 var validators = preload("../validators.gd").new()
 var utils = preload("../utils.gd").new()
 
@@ -109,19 +110,28 @@ master func done():
 puppet func create_dirs(dirs:Array):
 	print("Creating directories")
 	utils.create_dirs(dirs)
+	print("Directories created")
 	rpc_id(1,"done")
 
 puppet func store_file(path:String,buffer:PoolByteArray):
 	var id = get_tree().get_rpc_sender_id()
 	if id == get_tree().get_network_unique_id(): return
 	if not validators.validate_path(path): return
+	if ProjectSettings.localize_path(path).begins_with(main.plugin_dir): return
 	if id != 1: return #just for sure
+	var d = Directory.new()
+	if not d.dir_exists(path.get_base_dir()):
+		d.make_dir_recursive(path.get_base_dir())
 	var f = File.new()
-	if f.open(path,f.WRITE) != OK:
-		printerr("Error downloading ",path," could not open")
+	var err = f.open(path,f.WRITE)
+	if err != OK:
+		printerr("Error downloading ",path," err: ",err)
 		return
 	f.store_buffer(buffer)
 	f.close()
 	print("Received ",path)
 
+puppetsync func reload():
+	editor_interface.reload_scene_from_path(editor_interface.get_current_path())
+	print("Server has reloaded your current scene")
 

@@ -122,8 +122,10 @@ func send_project_files(id:int):
 	print("Sending files to user ",id)
 	client.rpc_id(id,"create_dirs",utils.scan_dirs("res://"))
 	yield(client,"action_finished")
+	print("Client responded with finish signal, sending files.")
+	yield(get_tree(),"idle_frame")
 	
-	var limitter_max = 5 #every X files, plugin will wait for few ms to prevent overload
+	var limitter_max = 20 #every X files, plugin will wait for few ms to prevent overload
 	var limitter = 0
 	var f = File.new()
 	for i in utils.scan_files("res://"):
@@ -141,7 +143,8 @@ func send_project_files(id:int):
 				client.rpc_id(id,"store_file",i,b)
 			else:
 				printerr("Failed to send ",i," err: ",err)
-			
+	print("files sent, sending reload packet")
+	client.rpc_id(id,"reload")
 
 remote func auth_client(nickname:String,password:String=""):
 	var id = get_tree().get_rpc_sender_id()

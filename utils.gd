@@ -42,10 +42,12 @@ func has_permission(level,permission) -> bool:
 	if permission in permissions[level]: return true
 	return false
 
-func create_dirs(dirs:PoolStringArray): #used to automatically create dirs from scan_dirs
+func create_dirs(dirs:PoolStringArray,debug:=false): #used to automatically create dirs from scan_dirs
 	var d = Directory.new()
 	for path in dirs:
 		if not(d.dir_exists(path)) and not(d.file_exists(path)):
+			if debug:
+				print("Created directory: ",path)
 			d.make_dir_recursive(path)
 
 func scan_dirs(path:String) -> Array:
