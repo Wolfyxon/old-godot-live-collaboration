@@ -39,6 +39,9 @@ func has_permission(level,permission) -> bool:
 	if permission in permissions[level]: return true
 	return false
 
+func file_exists(path:String):
+	return Directory.new().file_exists(path)
+
 func compare_dicts(a:Dictionary,b:Dictionary): # {"e":"e"} != {"e":"e"} for some reason
 	for key in a:
 		if not(key in b): return false

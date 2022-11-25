@@ -3,6 +3,7 @@ extends EditorPlugin
 
 var server = preload("networking/server.gd").new()
 var client = preload("networking/client.gd").new()
+var settings = preload("res://addons/GdLiveCollaboration/settings.gd").new()
 var utils = preload("utils.gd").new()
 var editor_events = preload("editor_events.gd").new(get_editor_interface())
 
@@ -18,6 +19,7 @@ var remove_with_self = []
 
 func _enter_tree():
 	self.name = "LiveCollaborationPlugin"
+	add_child(settings)
 	add_child(server)
 	add_child(client)
 	add_child(editor_events)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://addons/GdLiveCollaboration/guiTheme.tres" type="Theme" id=1]
 [ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/menu.gd" type="Script" id=2]
@@ -16,6 +16,8 @@
 [ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/nodeMods/checkBox.gd" type="Script" id=14]
 [ext_resource path="res://addons/GdLiveCollaboration/utils.gd" type="Script" id=15]
 [ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/progress_dialog.gd" type="Script" id=16]
+[ext_resource path="res://addons/GdLiveCollaboration/textures/icons/eye_opened.svg" type="Texture" id=17]
+[ext_resource path="res://addons/GdLiveCollaboration/gui/menuScripts/settings.gd" type="Script" id=18]
 
 [sub_resource type="DynamicFont" id=7]
 size = 12
@@ -43,6 +45,11 @@ font_data = ExtResource( 7 )
 size = 18
 font_data = ExtResource( 9 )
 
+[sub_resource type="DynamicFont" id=12]
+font_data = ExtResource( 7 )
+
+[sub_resource type="StyleBoxEmpty" id=13]
+
 [sub_resource type="DynamicFont" id=2]
 size = 22
 font_data = ExtResource( 7 )
@@ -65,9 +72,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -435.5
+margin_left = -436.0
 margin_top = -259.0
-margin_right = 435.5
+margin_right = 435.0
 margin_bottom = 259.0
 size_flags_horizontal = 15
 size_flags_vertical = 15
@@ -111,7 +118,7 @@ focus_mode = 2
 
 [node name="vbox" type="VBoxContainer" parent="tabs/Join or host/scroll"]
 margin_right = 845.0
-margin_bottom = 507.0
+margin_bottom = 475.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -154,15 +161,23 @@ margin_bottom = 78.0
 focus_mode = 2
 custom_styles/normal = ExtResource( 4 )
 
-[node name="start" type="HBoxContainer" parent="tabs/Join or host/scroll/vbox"]
+[node name="Label4" type="Label" parent="tabs/Join or host/scroll/vbox"]
 margin_top = 80.0
 margin_right = 833.0
-margin_bottom = 403.0
+margin_bottom = 102.0
+focus_mode = 2
+custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
+text = "WARNING: This plugin may allow remote code execution on your machine so make sure you work only with people you trust!"
+
+[node name="start" type="HBoxContainer" parent="tabs/Join or host/scroll/vbox"]
+margin_top = 106.0
+margin_right = 833.0
+margin_bottom = 371.0
 focus_mode = 2
 
 [node name="join" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
 margin_right = 402.0
-margin_bottom = 323.0
+margin_bottom = 265.0
 rect_pivot_offset = Vector2( -124.5, -4.5 )
 focus_mode = 2
 size_flags_horizontal = 3
@@ -216,51 +231,38 @@ text = "Password (optional if not required)"
 [node name="input_password" type="LineEdit" parent="tabs/Join or host/scroll/vbox/start/join"]
 margin_top = 109.0
 margin_right = 402.0
-margin_bottom = 131.0
+margin_bottom = 133.0
 rect_pivot_offset = Vector2( -104.5, -77.5 )
 secret = true
 clear_button_enabled = true
 placeholder_text = "Server password"
 
-[node name="Label4" type="Label" parent="tabs/Join or host/scroll/vbox/start/join"]
-margin_top = 135.0
-margin_right = 402.0
-margin_bottom = 242.0
-focus_mode = 2
-custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
-text = "With file and project settings access,
- users may remotely run malicous code
-on your machine. Host can see your IP adress.
-EVERYTHING IN THIS PROJECT WILL BE 
-OVERWRITTEN WITH THE
-HOST'S ONE!"
-
 [node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/join"]
-margin_top = 246.0
+margin_top = 137.0
 margin_right = 402.0
-margin_bottom = 270.0
+margin_bottom = 161.0
 text = "I understand the risk"
 script = ExtResource( 14 )
 enabled_block = NodePath("../btn_join")
 
 [node name="btn_join" type="Button" parent="tabs/Join or host/scroll/vbox/start/join"]
-margin_top = 274.0
+margin_top = 165.0
 margin_right = 402.0
-margin_bottom = 296.0
+margin_bottom = 187.0
 disabled = true
 text = "Join server"
 
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox/start"]
 margin_left = 406.0
 margin_right = 426.0
-margin_bottom = 323.0
+margin_bottom = 265.0
 rect_min_size = Vector2( 20, 75.01 )
 focus_mode = 2
 
 [node name="host" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
 margin_left = 430.0
 margin_right = 833.0
-margin_bottom = 323.0
+margin_bottom = 265.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -300,63 +302,53 @@ text = "Password (optional)"
 [node name="input_password" type="LineEdit" parent="tabs/Join or host/scroll/vbox/start/host"]
 margin_top = 107.0
 margin_right = 403.0
-margin_bottom = 129.0
+margin_bottom = 131.0
 rect_pivot_offset = Vector2( -104.5, -77.5 )
 secret = true
 clear_button_enabled = true
 placeholder_text = "This password will be required for people to join"
 
 [node name="Label5" type="Label" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 133.0
+margin_top = 135.0
 margin_right = 403.0
-margin_bottom = 155.0
+margin_bottom = 157.0
 focus_mode = 2
 text = "Max users:"
 
 [node name="input_max_users" type="SpinBox" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 159.0
+margin_top = 161.0
 margin_right = 403.0
-margin_bottom = 181.0
+margin_bottom = 183.0
 focus_mode = 2
 min_value = 1.0
 value = 5.0
 
-[node name="Label4" type="Label" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 185.0
-margin_right = 403.0
-margin_bottom = 241.0
-focus_mode = 2
-custom_colors/font_color = Color( 1, 0.74902, 0, 1 )
-text = "With file and project settings access, users 
-may remotely run malicous code on your machine. 
-Your project might also corrupt."
-
 [node name="ch_aproval" type="CheckButton" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 245.0
+margin_top = 187.0
 margin_right = 403.0
-margin_bottom = 269.0
+margin_bottom = 211.0
 disabled = true
 text = "Manual join aproval [recommended]"
 
 [node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 273.0
+margin_top = 215.0
 margin_right = 403.0
-margin_bottom = 297.0
+margin_bottom = 239.0
 text = "I understand the risk"
 script = ExtResource( 14 )
 enabled_block = NodePath("../btn_start")
 
 [node name="btn_start" type="Button" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 301.0
+margin_top = 243.0
 margin_right = 403.0
-margin_bottom = 323.0
+margin_bottom = 265.0
 disabled = true
 text = "Start server"
 
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox"]
-margin_top = 407.0
+margin_top = 375.0
 margin_right = 833.0
-margin_bottom = 507.0
+margin_bottom = 475.0
 rect_min_size = Vector2( 0, 100 )
 focus_mode = 2
 
@@ -564,7 +556,7 @@ columns = 7
 script = ExtResource( 5 )
 
 [node name="id" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_right = 117.0
+margin_right = 118.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -572,8 +564,8 @@ custom_styles/normal = ExtResource( 4 )
 text = "ID"
 
 [node name="nick" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_left = 121.0
-margin_right = 238.0
+margin_left = 122.0
+margin_right = 240.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -581,8 +573,8 @@ custom_styles/normal = ExtResource( 4 )
 text = "Nickname"
 
 [node name="ip" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_left = 242.0
-margin_right = 359.0
+margin_left = 244.0
+margin_right = 361.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -590,8 +582,8 @@ custom_styles/normal = ExtResource( 4 )
 text = "IP adress"
 
 [node name="permission" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_left = 363.0
-margin_right = 480.0
+margin_left = 365.0
+margin_right = 482.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -599,8 +591,8 @@ custom_styles/normal = ExtResource( 4 )
 text = "Permission level"
 
 [node name="log" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_left = 484.0
-margin_right = 601.0
+margin_left = 486.0
+margin_right = 603.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -608,8 +600,8 @@ custom_styles/normal = ExtResource( 4 )
 text = "."
 
 [node name="kick" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_left = 605.0
-margin_right = 722.0
+margin_left = 607.0
+margin_right = 724.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -617,8 +609,8 @@ custom_styles/normal = ExtResource( 4 )
 text = "."
 
 [node name="ban" type="Label" parent="tabs/server/vbox/people/columns"]
-margin_left = 726.0
-margin_right = 843.0
+margin_left = 728.0
+margin_right = 845.0
 margin_bottom = 18.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -875,7 +867,144 @@ size_flags_vertical = 3
 icon = ExtResource( 12 )
 expand_icon = true
 
+[node name="settings" type="Tabs" parent="tabs"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 29.0
+margin_right = -5.0
+margin_bottom = -5.0
+script = ExtResource( 18 )
+
+[node name="scroll" type="ScrollContainer" parent="tabs/settings"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="tabs/settings/scroll"]
+margin_right = 845.0
+margin_bottom = 438.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="title" type="Label" parent="tabs/settings/scroll/VBoxContainer"]
+margin_right = 845.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 12 )
+text = "Settings"
+align = 1
+
+[node name="ch_cursors" type="CheckBox" parent="tabs/settings/scroll/VBoxContainer"]
+margin_top = 35.0
+margin_right = 845.0
+margin_bottom = 59.0
+text = "Show user mouse pointers in 2D scenes"
+
+[node name="ch_cameras" type="CheckBox" parent="tabs/settings/scroll/VBoxContainer"]
+margin_top = 63.0
+margin_right = 845.0
+margin_bottom = 87.0
+text = "Show user cameras in 3D scenes"
+
+[node name="VBoxContainer" type="HBoxContainer" parent="tabs/settings/scroll/VBoxContainer"]
+margin_top = 91.0
+margin_right = 845.0
+margin_bottom = 122.0
+
+[node name="Label" type="Label" parent="tabs/settings/scroll/VBoxContainer/VBoxContainer"]
+margin_right = 62.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 12 )
+text = " ngrok"
+
+[node name="Label2" type="Label" parent="tabs/settings/scroll/VBoxContainer/VBoxContainer"]
+margin_left = 66.0
+margin_top = 4.0
+margin_right = 743.0
+margin_bottom = 26.0
+text = " ngrok is a tool that allows you to open ports to the internet without having to do that on your wifi router."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tabs/settings/scroll/VBoxContainer"]
+margin_top = 126.0
+margin_right = 845.0
+margin_bottom = 140.0
+
+[node name="ngrok_link" type="LinkButton" parent="tabs/settings/scroll/VBoxContainer/HBoxContainer"]
+margin_right = 119.0
+margin_bottom = 14.0
+text = "https://ngrok.com/"
+script = ExtResource( 6 )
+
+[node name="ngrok_download_link" type="LinkButton" parent="tabs/settings/scroll/VBoxContainer/HBoxContainer"]
+margin_left = 123.0
+margin_right = 303.0
+margin_bottom = 14.0
+focus_mode = 2
+text = "https://ngrok.com/download"
+script = ExtResource( 6 )
+
+[node name="ngrok_aur_link" type="LinkButton" parent="tabs/settings/scroll/VBoxContainer/HBoxContainer"]
+margin_left = 307.0
+margin_right = 563.0
+margin_bottom = 14.0
+focus_mode = 2
+text = "https://aur.archlinux.org/packages/ngrok"
+script = ExtResource( 6 )
+
+[node name="ngrok" type="HBoxContainer" parent="tabs/settings/scroll/VBoxContainer"]
+margin_top = 144.0
+margin_right = 845.0
+margin_bottom = 166.0
+
+[node name="Label" type="Label" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
+margin_right = 75.0
+margin_bottom = 22.0
+text = "ngrok path"
+
+[node name="path" type="LineEdit" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
+margin_left = 79.0
+margin_right = 355.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "/bin/ngrok"
+editable = false
+
+[node name="Label2" type="Label" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
+margin_left = 359.0
+margin_right = 442.0
+margin_bottom = 22.0
+text = "ngrok token"
+
+[node name="token" type="LineEdit" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
+margin_left = 446.0
+margin_right = 723.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+editable = false
+secret = true
+placeholder_text = "qwertyuiopasdfghjklzxcvbnm1234567890"
+
+[node name="btn_hide" type="Button" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
+margin_left = 727.0
+margin_right = 743.0
+margin_bottom = 22.0
+custom_styles/hover = SubResource( 13 )
+custom_styles/pressed = SubResource( 13 )
+custom_styles/focus = SubResource( 13 )
+custom_styles/disabled = SubResource( 13 )
+custom_styles/normal = SubResource( 13 )
+toggle_mode = true
+pressed = true
+icon = ExtResource( 17 )
+
+[node name="btn_ngrok_auth" type="Button" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
+margin_left = 747.0
+margin_right = 845.0
+margin_bottom = 22.0
+disabled = true
+text = "Auth to ngrok"
+
 [node name="info" type="Tabs" parent="tabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -942,7 +1071,9 @@ bbcode_enabled = true
 bbcode_text = "This plugin is still in development. There's a risk of your project getting corrupted, so make sure to always back up your project before editing.
 Users can edit ALL scripts and project settings, that means everyone can run malicous code on each other users' machine.
 If you find an exploit or corruption bug report it immidiately on GitHub issues."
-text = "This plugin is still under construction."
+text = "This plugin is still in development. There's a risk of your project getting corrupted, so make sure to always back up your project before editing.
+Users can edit ALL scripts and project settings, that means everyone can run malicous code on each other users' machine.
+If you find an exploit or corruption bug report it immidiately on GitHub issues."
 
 [node name="Label" type="Label" parent="tabs/info/vbox/info"]
 margin_top = 139.0
@@ -1051,3 +1182,4 @@ align = 1
 [connection signal="pressed" from="tabs/client/vbox/actions/btn_disconnect" to="." method="_on_btn_disconnect_pressed"]
 [connection signal="kick" from="tabs/server/vbox/people/columns" to="." method="_on_columns_kick"]
 [connection signal="requests_changed" from="tabs/server/popup_join_requests/scroll/join_requests" to="tabs" method="_on_join_requests_requests_changed"]
+[connection signal="pressed" from="tabs/settings/scroll/VBoxContainer/ngrok/btn_ngrok_auth" to="tabs/settings" method="_on_btn_ngrok_auth_pressed"]

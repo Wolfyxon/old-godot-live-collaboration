@@ -16,6 +16,7 @@ onready var host_menu = start_menu.get_node("host")
 onready var main = get_parent()
 onready var nickname_input = $tabs.tab_joinOrHost.get_node("scroll/vbox/nick/nick_input")
 
+
 func _ready():
 	if not Engine.editor_hint:
 		$Node/editor_warning.visible = true
@@ -29,21 +30,23 @@ func _ready():
 	main.client.connect("disconnected",self,"_disconnected")
 	$tabs.tab_server.get_node("vbox/serverOptions/btn_stop_server").connect("pressed",main.server,"stop_server")
 	
-func _physics_process(delta):
+func _process(delta):
+	if Input.is_key_pressed(KEY_F9): popup()
 	if not is_inside_tree(): return
 	if not main: return
 	$Node/cover.visible = $Node/alert.visible or $Node/progress_dialog.visible
 	$tabs.tab_joinOrHost.get_node("cover").visible = (main.server.server_running or main.client.connected)
 	$tabs/client/cover.visible = not(main.client.connected)
 	$tabs/server/cover.visible = not(main.server.server_running)
+	
 
+	
 func alert(text:String,title:String=""):
-	if not main: return
+	#if not main: return
 	while $Node/alert.visible: yield(get_tree(),"idle_frame")
 	$Node/alert.dialog_text = text
 	$Node/alert.window_title = title
 	$Node/alert.popup_centered()
-	pass
 
 func _disconnected():
 	$Node/progress_dialog.hide()
@@ -105,3 +108,5 @@ func _on_btn_disconnect_pressed():
 
 func _on_columns_kick(id:int):
 	main.server.kick(id,"Kicked by host.")
+
+
