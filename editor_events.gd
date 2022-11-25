@@ -112,7 +112,6 @@ var cached_properties = {}
 var scanning_properties = false
 func _property_check():
 	if not(main.server.server_running or main.client.connected): return
-	if not OS.is_window_focused(): return
 	_property_check_()
 	#if scanning_properties: return
 	#var t = Thread.new()
@@ -122,8 +121,10 @@ func _property_check_(): #run this always with thread!
 	scanning_properties = true
 	var scene = editor_interface.get_edited_scene_root()
 	if not scene: return
+	if not OS.is_window_focused(): return
 	var scene_path = scene.filename
-	var nodes = utils.get_descendants(scene)
+	var nodes = editor_interface.get_selection().get_selected_nodes() #utils.get_descendants(scene)
+	
 	for node in nodes:
 		if is_instance_valid(node) and not(node.is_queued_for_deletion()) and not(node.is_in_group(ignore_group)):
 			if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
@@ -232,17 +233,18 @@ func _node_removed(node:Node):
 var blocked_properties = {
 	#scene_path: {node_path: [properties]}
 }
-remotesync func set_property(path:NodePath,property:String,value,scene_path:String="",requireReload:bool=false):
+remotesync func set_property(path:NodePath,property:String,value,scene_path:="",requireReload:=false,force:=false): 
 	if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
 	if not(path in blocked_properties[scene_path]): blocked_properties[scene_path][path] = []
 	#if property in blocked_properties[scene_path][path]: return 
 	var id = get_tree().get_rpc_sender_id()
+	if (not force) and (id == get_tree().get_network_unique_id()): return #DO NOT USE FORCE, it's reserved for the plugin
 	if scene_path != "":
 		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
 			#TODO: Download updated scene from peer who edited it
 			return
 	
-	var node = get_node(path)
+	var node = get_node_or_null(path)
 	if node:
 		#blocked_properties[scene_path][path].append(property)
 		if not(node in cached_properties): 
@@ -256,12 +258,12 @@ remotesync func create_node(node_class:String,parent_path:NodePath,scene:String,
 		printerr("Invalid class: ",node_class)
 		return
 	if editor_interface.get_edited_scene_root().filename != scene: return
-	if not get_node(parent_path): return
+	if not get_node_or_null(parent_path): return
 	
 	var node = ClassDB.instance(node_class)
 
 remotesync func delete_node(path:NodePath,scene:String):
-	var node = get_node(path)
+	var node = get_node_or_null(path)
 
 ########### markers
 var marker_group_name = "LiveCollaboration_client_marker"
@@ -347,10 +349,10 @@ remote func move_camera_marker(pos:Vector3,rot:Vector3):
 	if not m: return
 	
 	#rpc_id(1,"set_property",m.get_path(),"translation",pos)
-	rpc_all("set_property",[m.get_path(),"translation",pos])
+	rpc_all("set_property",[m.get_path(),"translation",pos,"",false,true])
 	
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"rotation",rot)
-	rpc_all("set_property",[m.get_path(),"rotation",rot])
+	rpc_all("set_property",[m.get_path(),"rotation",rot,"",false,true])
 
 remote func move_cursor_marker(pos:Vector2):
 	var id = get_tree().get_rpc_sender_id()
@@ -358,7 +360,7 @@ remote func move_cursor_marker(pos:Vector2):
 	if not m: return
 		
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"global_position",pos)
-	rpc_all("set_property",[m.get_path(),"global_position",pos])
+	rpc_all("set_property",[m.get_path(),"global_position",pos,"",false,true])
 
 ####################### nodes
 
