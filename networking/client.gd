@@ -7,6 +7,10 @@ signal server_responded
 signal disconnected
 signal gui_alert
 
+signal action_finished
+signal action_accepted
+signal action_rejected
+
 var disconnect_on_version_mismatch = false
 
 var nickname:String = "Guest"
@@ -99,8 +103,13 @@ puppet func server_response(version:float,host_nickname:String,color:Color,id:in
 			"\nThis might cause major issues (including project file corruption).",
 			"WARNING")
 
+master func done():
+	emit_signal("action_finished")
+
 puppet func create_dirs(dirs:Array):
+	print("Creating directories")
 	utils.create_dirs(dirs)
+	rpc_id(1,"done")
 
 puppet func store_file(path:String,buffer:PoolByteArray):
 	var id = get_tree().get_rpc_sender_id()

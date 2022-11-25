@@ -121,11 +121,13 @@ func _nickname_changed(new_value): #WARNING: this fires if HOST nickname changes
 func send_project_files(id:int):
 	print("Sending files to user ",id)
 	client.rpc_id(id,"create_dirs",utils.scan_dirs("res://"))
+	yield(client,"action_finished")
+	
 	var limitter_max = 5 #every X files, plugin will wait for few ms to prevent overload
 	var limitter = 0
 	var f = File.new()
 	for i in utils.scan_files("res://"):
-		if (not(main.plugin_dir) in i) and validators.validate_path(i): #replicating plugin files may lead to major issues
+		if (not(main.plugin_dir) in i) and validators.validate_path(i) and not(i.begins_with(main.plugin_dir)): #replicating plugin files may lead to major issues
 			if limitter >= limitter_max:
 				limitter = 0
 				yield(get_tree(),"idle_frame")

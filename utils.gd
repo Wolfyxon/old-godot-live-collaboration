@@ -47,7 +47,7 @@ func create_dirs(dirs:PoolStringArray): #used to automatically create dirs from 
 	for path in dirs:
 		if not(d.dir_exists(path)) and not(d.file_exists(path)):
 			d.make_dir_recursive(path)
-	
+
 func scan_dirs(path:String) -> Array:
 	var dirs = []
 	var dir = Directory.new()
