@@ -11,6 +11,8 @@ signal user_connected
 signal user_disconnected
 
 onready var network = NetworkedMultiplayerENet.new()
+var validators = preload("../validators.gd").new()
+var utils = preload("../utils.gd").new()
 
 var host_nickname = "host" setget _nickname_changed
 var server_password = ""
@@ -81,6 +83,9 @@ func stop_server():
 	get_tree().network_peer = null
 	emit_signal("server_stopped")
 
+func is_user_authenticated(id:int):
+	return get_user_by_id(id) != null
+
 func get_connected_ids(include_host:bool=false):
 	var r = connected
 	if include_host: r.append(1)
@@ -113,6 +118,28 @@ func _nickname_changed(new_value): #WARNING: this fires if HOST nickname changes
 	#connected[0]["nickname"] = new_value #this is broken lmao, ill fix it later
 	pass
 
+func send_project_files(id:int):
+	print("Sending files to user ",id)
+	var limitter_max = 5 #every X files, plugin will wait for few ms to prevent overload
+	var limitter = 0
+	var f = File.new()
+	for i in utils.scan_files("res://"):
+		if (not(main.plugin_dir) in i) and validators.validate_path(i): #replicating plugin files may lead to major issues
+			if limitter >= limitter_max:
+				limitter = 0
+				yield(get_tree(),"idle_frame")
+				
+			var err = f.open(i,f.READ)
+			if err == OK:
+				var bytes = f.get_len()
+				var b = f.get_buffer(bytes)
+				#prints(i,"\n",b.get_string_from_utf8(),"\n")
+				print("Sent ",i," -> ",id)
+				client.rpc_id(id,"store_file",i,b)
+			else:
+				printerr("Failed to send ",i," err: ",err)
+			
+
 remote func auth_client(nickname:String,password:String=""):
 	var id = get_tree().get_rpc_sender_id()
 	print("Authenticating user: ",id," with nickname: ",nickname)
@@ -141,14 +168,31 @@ remote func auth_client(nickname:String,password:String=""):
 			main.editor_events.rpc_id(i,"create_markers", nickname,color,i)
 			main.editor_events.rpc_id(i,"create_markers", host_nickname,host_color,1)
 			main.editor_events.create_markers(nickname,color,i)
+		yield(get_tree(),"idle_frame")
+		send_project_files(id)
 	else:
 		yield(get_tree(),"idle_frame")
 		kick(id,error)
 
-master func download_from_server(path):
+master func request_file(path:String):
 	var id = get_tree().get_rpc_sender_id()
-	rpc_id(id,"store_file",path)
+	if not is_user_authenticated(id): return
+	if not validators.validate_path(path): 
+		rpc_id(id,"server_message","Invalid/insecure path")
+		return
+	if not utils.file_exists(path): 
+		rpc_id(id,"server_message","Server is unable to locate path of the file")
+		return
 	
+	var f = File.new()
+	var err = f.open(path,f.READ)
+	if err != OK:
+		rpc_id(id,"server_message","Server is unable to open the file.\nError code: "+String(err))
+	var b = f.get_buffer()
+	
+
+remote func upload_file(path,buffer):
+	pass
 
 remote func server_message(message:String,title:String="Server message"):
 	main.menu.alert(message,title)

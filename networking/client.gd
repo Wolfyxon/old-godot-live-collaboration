@@ -19,6 +19,8 @@ var used_password = ""
 var client_id = -1
 
 onready var main = get_parent()
+var validators = preload("../validators.gd").new()
+
 
 func _ready():
 	network.connect("connection_succeeded",self,"_connected")
@@ -33,7 +35,6 @@ func connect_to_server(ip:String,port:int,password:String=""):
 	if connected:
 		printerr("Client is already connected!")
 		return
-
 	print("Connecting to: ",ip,":",port)
 	network.refuse_new_connections = false
 	var err = network.create_client(ip,port)
@@ -99,19 +100,15 @@ puppet func server_response(version:float,host_nickname:String,color:Color,id:in
 			"WARNING")
 
 puppet func store_file(path:String,buffer:PoolByteArray):
+	var id = get_tree().get_rpc_sender_id()
+	if not validators.validate_path(path): return
+	if id != 1: return #just for sure
 	var f = File.new()
-	f.open(path,f.WRITE)
+	if f.open(path,f.WRITE) != OK:
+		printerr("Error downloading ",path," could not open")
+		return
 	f.store_buffer(buffer)
-
-master func update_file(path:String,buffer:PoolByteArray):
-	pass
-
-
-
-
-
-
-
-
+	f.close()
+	print("Received ",path)
 
 

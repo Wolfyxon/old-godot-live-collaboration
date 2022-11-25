@@ -53,13 +53,12 @@ func _ready():
 	main.remove_with_self.append(btn)
 	btn.disabled = true
 	btn.text = "Commit script changes"
-	btn.icon = load("res://addons/GdLiveCollaboration/textures/icons/green_check.png")
+	btn.icon = load(main.plugin_dir.plus_file("textures/icons/green_check.png"))
 	btn.hint_tooltip = "This is NOT availble yet, I need to create a system that will merge scripts to avoid overwriting someone's work.\nMark code as finished and send it to server"
 	tmp.add_child(btn)
 	tmp.move_child(btn,tmp.get_children().find(btn)-1)
 	
 	#tmp.add_child(btn)
-
 
 onready var tooltip_target = editor_interface.get_script_editor()
 func gui_highlight(): #used for finding certrain editor gui parts 

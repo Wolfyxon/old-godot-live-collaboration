@@ -3,9 +3,10 @@ extends EditorPlugin
 
 var server = preload("networking/server.gd").new()
 var client = preload("networking/client.gd").new()
-var settings = preload("res://addons/GdLiveCollaboration/settings.gd").new()
+var settings = preload("settings.gd").new()
 var utils = preload("utils.gd").new()
 var editor_events = preload("editor_events.gd").new(get_editor_interface())
+var validators = preload("validators.gd").new()
 
 var menu = preload("gui/menu.tscn").instance()
 var menuName = "Live Collaboration"
@@ -24,6 +25,7 @@ func _enter_tree():
 	add_child(client)
 	add_child(editor_events)
 	add_child(utils)
+	add_child(validators)
 	add_child(menu)
 	
 	add_tool_menu_item(menuName,self,"openMenu")

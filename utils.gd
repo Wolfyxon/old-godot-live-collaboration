@@ -22,8 +22,11 @@ var permissions = {
 	LEVEL_EDITOR:[1,2,3],
 }
 
-var projectPath = ProjectSettings.globalize_path("res://")
+var project_path = ProjectSettings.globalize_path("res://")
 var rng = RandomNumberGenerator.new()
+
+var supported
+
 
 func random(from:float,to:float,to_int:bool=true):
 	rng.randomize()
@@ -39,8 +42,29 @@ func has_permission(level,permission) -> bool:
 	if permission in permissions[level]: return true
 	return false
 
+func scan_files(path : String) -> Array:
+	var files : Array = []
+	var dir := Directory.new()
+	if dir.open(path) != OK: return []
+
+	if dir.list_dir_begin(true, true) != OK: return []
+
+	var file_name := dir.get_next()
+	while file_name != "":
+		if dir.current_is_dir():
+			files += scan_files(dir.get_current_dir() + "/" + file_name)
+		else:
+			files.append(dir.get_current_dir() + "/" + file_name)
+
+		file_name = dir.get_next()
+
+	return files
+
 func file_exists(path:String):
 	return Directory.new().file_exists(path)
+
+func dir_exists(path:String):
+	return Directory.new().dir_exists(path)
 
 func compare_dicts(a:Dictionary,b:Dictionary): # {"e":"e"} != {"e":"e"} for some reason
 	for key in a:
@@ -103,7 +127,7 @@ func is_file_in_project(path:String) -> bool: #prevents accessing files outside 
 		path = ProjectSettings.localize_path(path)
 
 	var globalized = ProjectSettings.globalize_path(path)
-	if not(globalized.begins_with(projectPath)):
+	if not(globalized.begins_with(project_path)):
 		return false
 	
 	return true
@@ -115,5 +139,5 @@ func is_valid_url(url:String):
 	
 	return true
 
-func get_resources_of_scene(scene_path:String):
-	pass
+func get_resources_of_scene(scene_path:String) -> PoolStringArray:
+	return ResourceLoader.get_dependencies(scene_path)

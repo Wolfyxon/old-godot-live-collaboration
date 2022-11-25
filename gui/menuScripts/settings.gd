@@ -2,7 +2,7 @@ extends Tabs
 tool
 
 var utils = preload("../../utils.gd").new()
-var main = get_parent().get_parent().main
+onready var main = get_parent().get_parent().main
 
 func _process(delta):
 	$scroll/VBoxContainer/ngrok/token.secret = $scroll/VBoxContainer/ngrok/btn_hide.pressed
