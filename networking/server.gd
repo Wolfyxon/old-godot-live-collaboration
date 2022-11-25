@@ -120,6 +120,7 @@ func _nickname_changed(new_value): #WARNING: this fires if HOST nickname changes
 
 func send_project_files(id:int):
 	print("Sending files to user ",id)
+	client.rpc_id(id,"create_dirs",utils.scan_dirs("res://"))
 	var limitter_max = 5 #every X files, plugin will wait for few ms to prevent overload
 	var limitter = 0
 	var f = File.new()

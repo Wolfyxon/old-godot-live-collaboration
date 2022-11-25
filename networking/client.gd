@@ -20,7 +20,7 @@ var client_id = -1
 
 onready var main = get_parent()
 var validators = preload("../validators.gd").new()
-
+var utils = preload("../utils.gd").new()
 
 func _ready():
 	network.connect("connection_succeeded",self,"_connected")
@@ -99,8 +99,12 @@ puppet func server_response(version:float,host_nickname:String,color:Color,id:in
 			"\nThis might cause major issues (including project file corruption).",
 			"WARNING")
 
+puppet func create_dirs(dirs:Array):
+	utils.create_dirs(dirs)
+
 puppet func store_file(path:String,buffer:PoolByteArray):
 	var id = get_tree().get_rpc_sender_id()
+	if id == get_tree().get_network_unique_id(): return
 	if not validators.validate_path(path): return
 	if id != 1: return #just for sure
 	var f = File.new()

@@ -41,7 +41,6 @@ func _enter_tree():
 	#for i in utils.get_descendants(get_editor_interface().get_parent()):
 		#print(i.get_script())
 
-
 func _exit_tree():
 	server.stop_server()
 	remove_tool_menu_item(menuName)

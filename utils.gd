@@ -42,6 +42,32 @@ func has_permission(level,permission) -> bool:
 	if permission in permissions[level]: return true
 	return false
 
+func create_dirs(dirs:PoolStringArray): #used to automatically create dirs from scan_dirs
+	var d = Directory.new()
+	for path in dirs:
+		if not(d.dir_exists(path)) and not(d.file_exists(path)):
+			d.make_dir_recursive(path)
+	
+func scan_dirs(path:String) -> Array:
+	var dirs = []
+	var dir = Directory.new()
+	if dir.open(path) != OK: return []
+
+	if dir.list_dir_begin(true, true) != OK: return []
+	
+	var file_name = dir.get_next()
+	while file_name != "":
+		if dir.current_is_dir():
+			var d = dir.get_current_dir()
+			if not(d in dirs): 
+				dirs.append(d)
+			for i in scan_dirs(d + "/" + file_name):
+				if not(i in dirs): 
+					dirs.append(i)
+				
+		file_name = dir.get_next()
+	return dirs
+
 func scan_files(path : String) -> Array:
 	var files : Array = []
 	var dir := Directory.new()
