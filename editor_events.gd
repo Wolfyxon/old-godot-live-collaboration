@@ -129,7 +129,6 @@ func _on_property_changed(node:Node,key:String,value,scene_path:String):
 	var path = node.get_path()
 	if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
 	if not(path in blocked_properties[scene_path]): blocked_properties[scene_path][path] = []
-	
 	if key in blocked_properties[scene_path][path]: 
 		return
 	rpc("set_property",path,key,value,scene_path)
@@ -151,12 +150,15 @@ func _property_check_(): #run this always with thread!
 	var scene_path = scene.filename
 	var nodes = editor_interface.get_selection().get_selected_nodes() #utils.get_descendants(scene)
 	
+	if not scene_path in cached_properties:
+		cached_properties[scene_path] = {}
+	
 	for node in nodes:
 		if is_instance_valid(node) and not(node.is_queued_for_deletion()) and not(node.is_in_group(ignore_group)):
 			if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
 			if not(node.get_path() in blocked_properties[scene_path]): blocked_properties[scene_path][node.get_path()] = []
 			var properties = utils.get_properties(node)
-			if node in cached_properties:
+			if node in cached_properties[scene_path]:
 				var cached = cached_properties[scene_path][node]
 				if not(utils.compare_dicts(cached,properties)):
 					cached_properties[scene_path][node] = properties
@@ -165,7 +167,6 @@ func _property_check_(): #run this always with thread!
 						if key in blocked_properties[scene_path][node.get_path()]:
 							ok = false
 							blocked_properties[scene_path].erase(node.get_path())
-							#break
 					if ok:
 						emit_signal("property_list_changed",node,properties,cached)
 				
@@ -270,13 +271,14 @@ remotesync func set_property(path:NodePath,property:String,value,scene_path:="",
 		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
 			#TODO: Download updated scene from peer who edited it
 			return
+
 	if not scene_path in cached_properties:
 		cached_properties[scene_path] = {}
-		
+	
 	var node = get_node_or_null(path)
 	if node:
 		#blocked_properties[scene_path][path].append(property)
-		if not(node in cached_properties): 
+		if not(node in cached_properties[scene_path]): 
 			cached_properties[scene_path][node] = utils.get_properties(node)
 		node.set(property,value)
 		node.set_meta("gdlc_last_modified",[id,OS.get_unix_time()])

@@ -114,7 +114,8 @@ puppet func create_dirs(dirs:Array):
 	rpc_id(1,"done")
 
 puppet func create_progress(id:String,title:="Please wait",max_value:=100,initial_value:=0):
-	main.menu.create_progress(id,title,max_value,initial_value)
+	print("Server created progress bar dialog with id: ",id)
+	main.menu.progress_bar_dialog.create_progress(id,title,max_value,initial_value)
 
 puppet func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
 	var id = get_tree().get_rpc_sender_id()
@@ -133,10 +134,12 @@ puppet func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
 	f.store_buffer(buffer)
 	f.close()
 	print("Received ",path)
-	if progress_id != "": main.menu.update_progress(progress_id)
+	if progress_id != "": 
+		main.menu.progress_bar_dialog.update_progress(progress_id)
 
 puppet func reload():
 	#editor_interface.reload_scene_from_path(editor_interface.get_current_path())
+	main.menu.progress_bar_dialog.remove_progress("project_download")
 	get_tree().reload_current_scene()
 	print("Server has reloaded your current scene")
 

@@ -128,7 +128,8 @@ func send_project_files(id:int):
 	var limitter_max = 20 #every X files, plugin will wait for few ms to prevent overload
 	var limitter = 0
 	var files = utils.scan_files("res://")
-	client.rpc_id(id,"create_progress","project_download","Downloading project files",files.size())
+	client.rpc_id(id,"create_progress","project_download","Downloading project files, get some coffe",files.size())
+	yield(get_tree(),"idle_frame")
 	var f = File.new()
 	for i in files:
 		if (not(main.plugin_dir) in i) and validators.validate_path(i) and not(i.begins_with(main.plugin_dir)): #replicating plugin files may lead to major issues
@@ -142,7 +143,7 @@ func send_project_files(id:int):
 				var b = f.get_buffer(bytes)
 				#prints(i,"\n",b.get_string_from_utf8(),"\n")
 				print("Sent ",i," -> ",id)
-				client.rpc_id(id,"store_file",i,b)
+				client.rpc_id(id,"store_file",i,b,"project_download")
 			else:
 				printerr("Failed to send ",i," err: ",err)
 	print("files sent, sending reload packet")

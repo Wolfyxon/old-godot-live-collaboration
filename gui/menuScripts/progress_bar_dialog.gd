@@ -10,6 +10,10 @@ func _ready():
 	template_lbl.visible = false
 	template_pb.visible = false
 
+func _process(delta):
+	if not visible: return
+	if get_bars().size() == 0: hide()
+
 func get_bars() -> Array:
 	var r = []
 	for i in $vbox.get_children():
@@ -63,5 +67,3 @@ func update_progress(id:String,amount:=1):
 func remove_progress(id:String):
 	for i in get_by_id(id):
 		i.queue_free()
-	yield(get_tree(),"idle_frame")
-	if get_bars().size() == 0: hide()
