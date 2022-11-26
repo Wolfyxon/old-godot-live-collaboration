@@ -127,8 +127,10 @@ func send_project_files(id:int):
 	
 	var limitter_max = 20 #every X files, plugin will wait for few ms to prevent overload
 	var limitter = 0
+	var files = utils.scan_files("res://")
+	client.rpc_id(id,"create_progress","project_download","Downloading project files",files.size())
 	var f = File.new()
-	for i in utils.scan_files("res://"):
+	for i in files:
 		if (not(main.plugin_dir) in i) and validators.validate_path(i) and not(i.begins_with(main.plugin_dir)): #replicating plugin files may lead to major issues
 			if limitter >= limitter_max:
 				limitter = 0

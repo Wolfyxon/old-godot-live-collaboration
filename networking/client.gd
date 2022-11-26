@@ -113,7 +113,10 @@ puppet func create_dirs(dirs:Array):
 	print("Directories created")
 	rpc_id(1,"done")
 
-puppet func store_file(path:String,buffer:PoolByteArray):
+puppet func create_progress(id:String,title:="Please wait",max_value:=100,initial_value:=0):
+	main.menu.create_progress(id,title,max_value,initial_value)
+
+puppet func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
 	var id = get_tree().get_rpc_sender_id()
 	if id == get_tree().get_network_unique_id(): return
 	if not validators.validate_path(path): return
@@ -125,13 +128,15 @@ puppet func store_file(path:String,buffer:PoolByteArray):
 	var f = File.new()
 	var err = f.open(path,f.WRITE)
 	if err != OK:
-		printerr("Error downloading ",path," err: ",err)
+		printerr("Error saving ",path," err: ",err)
 		return
 	f.store_buffer(buffer)
 	f.close()
 	print("Received ",path)
+	if progress_id != "": main.menu.update_progress(progress_id)
 
-puppetsync func reload():
-	editor_interface.reload_scene_from_path(editor_interface.get_current_path())
+puppet func reload():
+	#editor_interface.reload_scene_from_path(editor_interface.get_current_path())
+	get_tree().reload_current_scene()
 	print("Server has reloaded your current scene")
 

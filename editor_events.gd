@@ -157,9 +157,9 @@ func _property_check_(): #run this always with thread!
 			if not(node.get_path() in blocked_properties[scene_path]): blocked_properties[scene_path][node.get_path()] = []
 			var properties = utils.get_properties(node)
 			if node in cached_properties:
-				var cached = cached_properties[node]
+				var cached = cached_properties[scene_path][node]
 				if not(utils.compare_dicts(cached,properties)):
-					cached_properties[node] = properties
+					cached_properties[scene_path][node] = properties
 					var ok = true
 					for key in properties:
 						if key in blocked_properties[scene_path][node.get_path()]:
@@ -182,7 +182,7 @@ func _property_check_(): #run this always with thread!
 	#					emit_signal("property_changed",node,key,value,scene_path)
 	#					cached_properties[node] = properties
 			else:
-				cached_properties[node] = properties
+				cached_properties[scene_path][node] = properties
 	scanning_properties = false
 	emit_signal("properties_scanned")
 
@@ -247,7 +247,8 @@ func _node_added(node:Node):
 	
 	if get_tree().network_peer:
 		#if not main.server.server_running: rpc_id(1,"create_node",node)
-		rpc_all("create_node",[node])
+		#rpc_all("create_node",[node])
+		pass
 	
 func _node_removed(node:Node):
 	if not is_in_current_scene(node): return
@@ -269,15 +270,17 @@ remotesync func set_property(path:NodePath,property:String,value,scene_path:="",
 		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
 			#TODO: Download updated scene from peer who edited it
 			return
-	
+	if not scene_path in cached_properties:
+		cached_properties[scene_path] = {}
+		
 	var node = get_node_or_null(path)
 	if node:
 		#blocked_properties[scene_path][path].append(property)
 		if not(node in cached_properties): 
-			cached_properties[node] = utils.get_properties(node)
+			cached_properties[scene_path][node] = utils.get_properties(node)
 		node.set(property,value)
 		node.set_meta("gdlc_last_modified",[id,OS.get_unix_time()])
-		cached_properties[node][property] = value
+		cached_properties[scene_path][node][property] = value
 
 remotesync func create_node(node_class:String,parent_path:NodePath,scene:String,properties:Dictionary={},name:String=""):
 	if not ClassDB.is_class(node_class): 
