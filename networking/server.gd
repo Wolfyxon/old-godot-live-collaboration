@@ -128,7 +128,7 @@ func send_project_files(id:int):
 	var limitter_max = 20 #every X files, plugin will wait for few ms to prevent overload
 	var limitter = 0
 	var files = utils.scan_files("res://")
-	client.rpc_id(id,"create_progress","project_download","Downloading project files, get some coffe",files.size())
+	client.rpc_id(id,"create_progress","project_download","Downloading project files, go get some coffe",files.size())
 	yield(get_tree(),"idle_frame")
 	var f = File.new()
 	for i in files:
@@ -178,7 +178,7 @@ remote func auth_client(nickname:String,password:String=""):
 			main.editor_events.rpc_id(i,"create_markers", host_nickname,host_color,1)
 			main.editor_events.create_markers(nickname,color,i)
 		yield(get_tree(),"idle_frame")
-		send_project_files(id)
+		#send_project_files(id)
 	else:
 		yield(get_tree(),"idle_frame")
 		kick(id,error)

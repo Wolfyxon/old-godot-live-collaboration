@@ -328,7 +328,7 @@ func _input(event):
 		rpc_all("move_camera_marker",[camera_marker.translation,camera_marker.rotation])
 		#if not main.server.server_running: rpc_id(1,"move_camera_marker",camera_marker.translation,camera_marker.rotation)
 	if prev_cursor_pos != cursor_marker.position:
-		rpc_all("move_cursor_marker",[cursor_marker.global_position])
+		rpc_all("move_cursor_marker",[cursor_marker.global_position,editor_interface.get_edited_scene_root().filename])
 		#if not main.server.server_running: rpc_id(1,"move_cursor_marker",cursor_marker.global_position)
 	
 remote func remove_all_markers():
@@ -343,6 +343,7 @@ remote func create_markers(nickname:String,color:Color,id:int):
 	add_child(camera)
 	add_child(cursor)
 	cursor.name = "cursor_"+String(id)
+	cursor.editor_interface = editor_interface
 	camera.name = "camera_"+String(id)
 	
 	camera.add_to_group(marker_group_name); cursor.add_to_group(marker_group_name)
@@ -354,6 +355,7 @@ remote func create_markers(nickname:String,color:Color,id:int):
 		camera.visible = false
 
 	camera.id = id; cursor.id = id
+	if cursor.id == get_tree().get_network_unique_id(): cursor.is_self = true
 	camera.set_nickname(nickname); cursor.set_nickname(nickname)
 	camera.set_color(color); cursor.set_color(color)
 	
@@ -385,13 +387,16 @@ remote func move_camera_marker(pos:Vector3,rot:Vector3):
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"rotation",rot)
 	rpc_all("set_property",[m.get_path(),"rotation",rot,"",false,true])
 
-remote func move_cursor_marker(pos:Vector2):
+remote func move_cursor_marker(pos:Vector2,scene:=""):
 	var id = get_tree().get_rpc_sender_id()
 	var m = get_cursor_marker(id)
 	if not m: return
-		
+	var current_scene = editor_interface.get_edited_scene_root().filename
+	if m.id == get_tree().get_network_unique_id(): return
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"global_position",pos)
+	
 	rpc_all("set_property",[m.get_path(),"global_position",pos,"",false,true])
+	rpc_all("set_property",[m.get_path(),"scene_path",scene,"",false,true])
 
 ####################### nodes
 
