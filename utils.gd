@@ -97,12 +97,22 @@ func dir_exists(path:String):
 	return Directory.new().dir_exists(path)
 
 
+var file_prefix = "<:file:>"
 func decode(bytes:PoolByteArray):
 	var decoded = bytes2var(bytes,true)
-
+	if (decoded is String):
+		#for some reason it can't find file_prefix at this point, it must be done outside the function
+		if decoded.begins_with(file_prefix):
+			return load(decoded.replace(file_prefix,""))
 	return decoded
 
 func encode(variant):
+	if variant is Resource:
+		var path = variant.resource_path
+		if not "::" in path:
+			variant = file_prefix+path
+			#variant = ResourcePlaceholder.new(variant)
+	
 	return var2bytes(variant,true)
 
 func compare_dicts(a:Dictionary,b:Dictionary): # {"e":"e"} != {"e":"e"} for some reason

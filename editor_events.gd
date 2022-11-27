@@ -275,6 +275,11 @@ remotesync func set_property(path:NodePath,property:String,encodedValue:PoolByte
 	var node = get_node_or_null(path)
 	if node:
 		var value = utils.decode(encodedValue)
+		if (value is String) and value.begins_with(utils.file_prefix):
+			#for some reason this cannot be done inside decode function
+			value = load(value.replace(utils.file_prefix,""))
+			
+
 		#blocked_properties[scene_path][path].append(property)
 		if not(node in cached_properties[scene_path]): 
 			cached_properties[scene_path][node] = utils.get_properties(node)
