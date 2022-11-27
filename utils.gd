@@ -96,8 +96,11 @@ func file_exists(path:String):
 func dir_exists(path:String):
 	return Directory.new().dir_exists(path)
 
+
 func decode(bytes:PoolByteArray):
-	return bytes2var(bytes,true)
+	var decoded = bytes2var(bytes,true)
+
+	return decoded
 
 func encode(variant):
 	return var2bytes(variant,true)

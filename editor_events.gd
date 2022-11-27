@@ -119,9 +119,11 @@ func is_in_current_scene(node:Node):
 func _on_property_list_changed(node:Node,properties:Dictionary,previous:={}):
 	if not(main.server.server_running or main.client.connected): return
 	var path = node.get_path()
-	for i in properties:
-		var value = node.get(i)
-		rpc_all("set_property",[ path,i,utils.encode(properties[i]),editor_interface.get_edited_scene_root().filename ])
+	var blacklist = ["script","owner","filename","unique_name_in_owner","multiplayer","custom_multiplayer"]
+	for key in properties:
+		if not(key in blacklist):
+			var value = node.get(key)
+			rpc_all("set_property",[ path,key,utils.encode(properties[key]),editor_interface.get_edited_scene_root().filename ])
 
 func _on_property_changed(node:Node,key:String,value,scene_path:String):
 	if not(main.server.server_running or main.client.connected): return
