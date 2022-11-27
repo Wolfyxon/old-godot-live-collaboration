@@ -1,0 +1,19 @@
+name: Feature request
+description: Request a new feature
+body:
+- type: textarea
+  attributes:
+    label: Description
+    description: |
+      Describe exactly what do you want to be added.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Why?
+    description: |
+       Why should it be added?
+  validations:
+    required: true
+    
