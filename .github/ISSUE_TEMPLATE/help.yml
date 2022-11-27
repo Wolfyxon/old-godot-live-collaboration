@@ -12,7 +12,8 @@ body:
     
 - type: checkboxes
   attributes:
-    label: Make sure you've read the [wiki](https://github.com/Wolfyxon/godot-live-collaboration/wiki)
+    label: Make sure you've read the wiki
+    description: Wiki can be found [here](https://github.com/Wolfyxon/godot-live-collaboration/wiki)
     options:
     - label: I have read the wiki
       required: true
