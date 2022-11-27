@@ -1,27 +1,11 @@
 # Godot Live Collaboration
-📡 Work on your Godot games with friends toghether!
+📡 Work on your Godot games with friends toghether!  
+**Make sure to also see the [wiki](https://github.com/Wolfyxon/godot-live-collaboration/wiki) and articles such as [instalation](https://github.com/Wolfyxon/godot-live-collaboration/wiki/Instalation)**
 
-## Features
-- Synchronization, plugin will detect and replicate changes on each client.
-- Visualisation, you can see where each editor's mouse and 3D camera is.
-- Security, servers can be password protected and you as host can kick any user anytime you want.
-
-## Installing
-Create folder `addons` in your project's folder.
-Then download source code of this repository and unpack it or clone it directly from terminal
-```
-git clone https://github.com/Wolfyxon/godot-live-collaboration.git
-```
-After that, go to **Project** -> **Project settings** -> Plugins and enable the addon.
-![](https://github.com/Wolfyxon/godot-live-collaboration/blob/main/.github/images/tutorial_enabling.gif?raw=true)
-
-## Using the addon
-After the addons is enabled, go to **Project** -> Tools -> **Live Collaboration** and here is the addon's panel.
-### Hosting
-TODO: gif and explaination
-### Joining
-TODO: gif and explaination
-
+## How does it work?
+It's basic Godot multiplayer, but running in the editor itself.  
+To check for changes, plugin saves properties of every node then repeatedly scans the project if the properties have changed.
+If they do so, plugin sends a packet to all users to update that specific node. Of course, it's much more complicated speaking of code.
 
 
 ## Alternatives
