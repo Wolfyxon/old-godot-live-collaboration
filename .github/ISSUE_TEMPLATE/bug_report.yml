@@ -25,3 +25,11 @@ body:
       Specify the version of your Godot Engine.
   validations:
     required: true
+
+- type: textarea
+  attributes:
+    label: Logs
+    description: |
+       If there's an error, it should appear in `Output'. If you're not printing Godot's logs into a file, paste the full output here. If you are printing them to a file, upload it.
+  validations:
+    required: true
