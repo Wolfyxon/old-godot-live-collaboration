@@ -67,9 +67,10 @@ func _on_btn_join_pressed():
 	var ip_input = inputs.get_node("input_ip")
 	var port_input = inputs.get_node("input_port")
 	
-	if not(ip_input.text.is_valid_ip_address()):
-		alert("Please enter a valid IP adress","Invalid IP")
-		return
+	#it doesn't let connect to URLs
+#	if not(ip_input.text.is_valid_ip_address()):
+#		alert("Please enter a valid IP adress","Invalid IP")
+#		return
 	
 	$tabs.current_tab = $tabs.get_tab_idx($tabs.tab_client)
 	emit_signal("connect_to_server",
