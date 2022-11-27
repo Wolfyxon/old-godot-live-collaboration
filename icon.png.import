@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/icon.png-1068aa59882d2a638b79324938ded5af.stex"
+path="res://.import/icon.png-422017e23050197a9b9e08ada0a22c1c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/GdLiveCollaboration/icon.png"
-dest_files=[ "res://.import/icon.png-1068aa59882d2a638b79324938ded5af.stex" ]
+source_file="res://addons/godot-live-collaboration/icon.png"
+dest_files=[ "res://.import/icon.png-422017e23050197a9b9e08ada0a22c1c.stex" ]
 
 [params]
 

@@ -1,7 +1,7 @@
 extends Node
 tool
 #Script for validating files and resources
-var utils = preload("res://addons/GdLiveCollaboration/utils.gd").new()
+var utils = preload("utils.gd").new()
 
 var project_path = ProjectSettings.globalize_path("res://")
 var data_path = ProjectSettings.globalize_path("user://")

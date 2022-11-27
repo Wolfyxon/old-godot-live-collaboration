@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/GdLiveCollaboration/client_scenes/scripts/client3D.gd" type="Script" id=2]
+[ext_resource path="res://addons/godot-live-collaboration/client_scenes/scripts/client3D.gd" type="Script" id=1]
 
 [sub_resource type="SphereMesh" id=1]
 radius = 0.1
@@ -8,7 +8,7 @@ height = 0.2
 
 [sub_resource type="SpatialMaterial" id=2]
 flags_transparent = true
-albedo_color = Color( 0, 1, 1, 1 )
+albedo_color = Color( 1, 0, 0, 0.5 )
 
 [sub_resource type="CylinderMesh" id=3]
 top_radius = 0.02
@@ -22,7 +22,7 @@ height = 2.513
 
 [node name="client3D" type="Spatial" groups=["gdlc_ignore"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00533557, 1.19209e-07, -0.00892258 )
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
 }

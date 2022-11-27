@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/eye_opened.svg-c4103bdb8b1a838b360de26a5b4c5d59.stex"
+path="res://.import/eye_opened.svg-ab64341e885c42a3d24f42947f6acba0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/GdLiveCollaboration/textures/icons/eye_opened.svg"
-dest_files=[ "res://.import/eye_opened.svg-c4103bdb8b1a838b360de26a5b4c5d59.stex" ]
+source_file="res://addons/godot-live-collaboration/textures/icons/eye_opened.svg"
+dest_files=[ "res://.import/eye_opened.svg-ab64341e885c42a3d24f42947f6acba0.stex" ]
 
 [params]
 

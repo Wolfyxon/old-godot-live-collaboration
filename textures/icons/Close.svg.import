@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Close.svg-f1487ca38ef4835646d77857cfe0aa8e.stex"
+path="res://.import/Close.svg-5215c6421bfbe7f0ccc363578c5754ea.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/GdLiveCollaboration/textures/icons/Close.svg"
-dest_files=[ "res://.import/Close.svg-f1487ca38ef4835646d77857cfe0aa8e.stex" ]
+source_file="res://addons/godot-live-collaboration/textures/icons/Close.svg"
+dest_files=[ "res://.import/Close.svg-5215c6421bfbe7f0ccc363578c5754ea.stex" ]
 
 [params]
 
