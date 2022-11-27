@@ -179,6 +179,7 @@ remote func auth_client(nickname:String,password:String=""):
 			main.editor_events.create_markers(nickname,color,i)
 		yield(get_tree(),"idle_frame")
 		#send_project_files(id)
+		client.rpc_id(id,"send_encoded",utils.encode(self))
 	else:
 		yield(get_tree(),"idle_frame")
 		kick(id,error)

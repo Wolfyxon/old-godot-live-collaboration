@@ -246,11 +246,7 @@ func _node_added(node:Node):
 	if not is_in_current_scene(node): return
 	emit_signal("node_added",node,utils.get_properties(node))
 	
-	if get_tree().network_peer:
-		#if not main.server.server_running: rpc_id(1,"create_node",node)
-		#rpc_all("create_node",[node])
-		pass
-	
+
 func _node_removed(node:Node):
 	if not is_in_current_scene(node): return
 	emit_signal("node_removed",node)
@@ -283,6 +279,8 @@ remotesync func set_property(path:NodePath,property:String,value,scene_path:="",
 		node.set(property,value)
 		node.set_meta("gdlc_last_modified",[id,OS.get_unix_time()])
 		cached_properties[scene_path][node][property] = value
+
+
 
 remotesync func create_node(node_class:String,parent_path:NodePath,scene:String,properties:Dictionary={},name:String=""):
 	if not ClassDB.is_class(node_class): 

@@ -28,6 +28,8 @@ var rng = RandomNumberGenerator.new()
 var supported
 
 
+
+
 func random(from:float,to:float,to_int:bool=true):
 	rng.randomize()
 	var r = rng.randf_range(from,to)
@@ -94,20 +96,27 @@ func file_exists(path:String):
 func dir_exists(path:String):
 	return Directory.new().dir_exists(path)
 
+func decode(bytes:PoolByteArray):
+	return bytes2var(bytes,true)
+
+func encode(variant):
+	return var2bytes(variant,true)
+
 func compare_dicts(a:Dictionary,b:Dictionary): # {"e":"e"} != {"e":"e"} for some reason
-	for key in a:
-		if not(key in b): return false
-	for key in b:
-		if not(key in a): return false
-	
-	for key in a:
-		if a[key] is Dictionary:
-			if not( compare_dicts(a[key],b[key]) ): 
-				return false
-		else:
-			if a[key] != b[key]: 
-				return false
-	return true
+	return a.hash() == b.hash()
+#	for key in a:
+#		if not(key in b): return false
+#	for key in b:
+#		if not(key in a): return false
+#
+#	for key in a:
+#		if a[key] is Dictionary:
+#			if not( compare_dicts(a[key],b[key]) ): 
+#				return false
+#		else:
+#			if a[key] != b[key]: 
+#				return false
+#	return true
 
 func get_node_from_array(array:Array,name:String) -> Object:
 	for i in array:
