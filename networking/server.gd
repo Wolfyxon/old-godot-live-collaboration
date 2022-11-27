@@ -178,7 +178,7 @@ remote func auth_client(nickname:String,password:String=""):
 			main.editor_events.rpc_id(i,"create_markers", host_nickname,host_color,1)
 			main.editor_events.create_markers(nickname,color,i)
 		yield(get_tree(),"idle_frame")
-		#send_project_files(id)
+		send_project_files(id)
 	else:
 		yield(get_tree(),"idle_frame")
 		kick(id,error)
