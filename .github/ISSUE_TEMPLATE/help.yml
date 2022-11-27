@@ -1,0 +1,18 @@
+name: Help
+description: Ask for a support
+labels: ["help wanted"]
+body:
+- type: textarea
+  attributes:
+    label: Question
+    description: |
+      What's wrong?
+  validations:
+    required: true
+    
+- type: checkboxes
+  attributes:
+    label: Make sure you've read the [wiki](https://github.com/Wolfyxon/godot-live-collaboration/wiki)
+    options:
+    - label: I have read the wiki
+      required: true
