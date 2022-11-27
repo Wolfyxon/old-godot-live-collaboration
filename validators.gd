@@ -17,7 +17,6 @@ func validate_path(path:String):
 	for i in invalid_in_project_paths:
 		if localized_path.begins_with("res://"+i): 
 			return false 
-	
 	return true
 
 func validate_resource(path:String):

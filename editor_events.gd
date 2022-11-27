@@ -121,8 +121,7 @@ func _on_property_list_changed(node:Node,properties:Dictionary,previous:={}):
 	var path = node.get_path()
 	for i in properties:
 		var value = node.get(i)
-		if value and not(value is Object): #TODO: encoding and decoding objects from dicts
-			rpc_all("set_property",[ path,i,properties[i],editor_interface.get_edited_scene_root().filename ])
+		rpc_all("set_property",[ path,i,utils.encode(properties[i]),editor_interface.get_edited_scene_root().filename ])
 
 func _on_property_changed(node:Node,key:String,value,scene_path:String):
 	if not(main.server.server_running or main.client.connected): return
@@ -131,7 +130,7 @@ func _on_property_changed(node:Node,key:String,value,scene_path:String):
 	if not(path in blocked_properties[scene_path]): blocked_properties[scene_path][path] = []
 	if key in blocked_properties[scene_path][path]: 
 		return
-	rpc("set_property",path,key,value,scene_path)
+	rpc("set_property",path,key,utils.encode(value),scene_path)
 
 var cached_properties = {}
 var scanning_properties = false
@@ -257,7 +256,7 @@ func _node_removed(node:Node):
 var blocked_properties = {
 	#scene_path: {node_path: [properties]}
 }
-remotesync func set_property(path:NodePath,property:String,value,scene_path:="",requireReload:=false,force:=false): 
+remotesync func set_property(path:NodePath,property:String,encodedValue:PoolByteArray,scene_path:="",requireReload:=false,force:=false): 
 	if not(scene_path in blocked_properties): blocked_properties[scene_path] = {}
 	if not(path in blocked_properties[scene_path]): blocked_properties[scene_path][path] = []
 	#if property in blocked_properties[scene_path][path]: return 
@@ -273,6 +272,7 @@ remotesync func set_property(path:NodePath,property:String,value,scene_path:="",
 	
 	var node = get_node_or_null(path)
 	if node:
+		var value = utils.decode(encodedValue)
 		#blocked_properties[scene_path][path].append(property)
 		if not(node in cached_properties[scene_path]): 
 			cached_properties[scene_path][node] = utils.get_properties(node)
@@ -380,10 +380,10 @@ remote func move_camera_marker(pos:Vector3,rot:Vector3):
 	if not m: return
 	
 	#rpc_id(1,"set_property",m.get_path(),"translation",pos)
-	rpc_all("set_property",[m.get_path(),"translation",pos,"",false,true])
+	rpc_all("set_property",[m.get_path(),"translation",utils.encode(pos),"",false,true])
 	
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"rotation",rot)
-	rpc_all("set_property",[m.get_path(),"rotation",rot,"",false,true])
+	rpc_all("set_property",[m.get_path(),"rotation",utils.encode(rot),"",false,true])
 
 remote func move_cursor_marker(pos:Vector2,scene:=""):
 	var id = get_tree().get_rpc_sender_id()
@@ -393,8 +393,8 @@ remote func move_cursor_marker(pos:Vector2,scene:=""):
 	if m.id == get_tree().get_network_unique_id(): return
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"global_position",pos)
 	
-	rpc_all("set_property",[m.get_path(),"global_position",pos,"",false,true])
-	rpc_all("set_property",[m.get_path(),"scene_path",scene,"",false,true])
+	rpc_all("set_property",[m.get_path(),"global_position",utils.encode(pos),"",false,true])
+	rpc_all("set_property",[m.get_path(),"scene_path",utils.encode(scene),"",false,true])
 
 ####################### nodes
 

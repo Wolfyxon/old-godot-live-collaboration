@@ -137,9 +137,6 @@ puppet func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
 	if progress_id != "": 
 		main.menu.progress_bar_dialog.update_progress(progress_id)
 
-remote func send_encoded(bytes:PoolByteArray):
-	print("DECODED: ",utils.decode(bytes))
-
 puppet func reload():
 	#editor_interface.reload_scene_from_path(editor_interface.get_current_path())
 	main.menu.progress_bar_dialog.remove_progress("project_download")
