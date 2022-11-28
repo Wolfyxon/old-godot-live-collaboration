@@ -201,7 +201,8 @@ master func request_file(path:String):
 	var err = f.open(path,f.READ)
 	if err != OK:
 		rpc_id(id,"server_message","Server is unable to open the file.\nError code: "+String(err))
-	var b = f.get_buffer()
+	var b = f.get_buffer(f.get_len())
+	client.rpc_id(id,"store_file",path,b)
 	
 
 remote func upload_file(path,buffer):

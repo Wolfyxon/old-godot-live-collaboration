@@ -116,6 +116,15 @@ func is_in_current_scene(node:Node):
 	
 	return true
 
+func save_current_scene():
+	var scene = editor_interface.get_edited_scene_root()
+	if not scene: return
+	var path = scene.filename
+	if not path: return
+	var packed = PackedScene.new()
+	packed.pack(scene)
+	ResourceSaver.save(path,packed)
+
 func _on_property_list_changed(node:Node,properties:Dictionary,previous:={}):
 	if not(main.server.server_running or main.client.connected): return
 	var path = node.get_path()
@@ -123,6 +132,7 @@ func _on_property_list_changed(node:Node,properties:Dictionary,previous:={}):
 	for key in properties:
 		if not(key in blacklist):
 			var value = node.get(key)
+			save_current_scene()
 			rpc_all("set_property",[ path,key,utils.encode(properties[key]),editor_interface.get_edited_scene_root().filename ])
 
 func _on_property_changed(node:Node,key:String,value,scene_path:String):
@@ -264,9 +274,9 @@ remotesync func set_property(path:NodePath,property:String,encodedValue:PoolByte
 	#if property in blocked_properties[scene_path][path]: return 
 	var id = get_tree().get_rpc_sender_id()
 	if (not force) and (id == get_tree().get_network_unique_id()): return #DO NOT USE FORCE, it's reserved for the plugin
-	if scene_path != "":
+	if (scene_path != "") and not(force):
 		if get_editor_interface().get_edited_scene_root().filename != scene_path: 
-			#TODO: Download updated scene from peer who edited it
+			main.server.rpc_id(1,"request_file",scene_path)
 			return
 
 	if not scene_path in cached_properties:

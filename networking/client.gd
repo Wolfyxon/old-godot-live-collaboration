@@ -127,6 +127,7 @@ puppet func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
 	var d = Directory.new()
 	if not d.dir_exists(path.get_base_dir()):
 		d.make_dir_recursive(path.get_base_dir())
+	d.make_dir_recursive(path.get_base_dir())
 	var f = File.new()
 	var err = f.open(path,f.WRITE)
 	if err != OK:
