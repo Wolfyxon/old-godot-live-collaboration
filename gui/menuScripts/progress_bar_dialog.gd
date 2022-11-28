@@ -66,4 +66,5 @@ func update_progress(id:String,amount:=1):
 
 func remove_progress(id:String):
 	for i in get_by_id(id):
-		i.queue_free()
+		if i and is_instance_valid(i):
+			i.queue_free()

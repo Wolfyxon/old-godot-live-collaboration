@@ -7,6 +7,7 @@ signal server_started
 signal server_stopped
 signal server_start_failed
 
+signal user_auth
 signal user_connected
 signal user_disconnected
 
@@ -112,7 +113,7 @@ func random_color():
 func kick(id:int,reason:String=""):
 	if reason != "": 
 		rpc_id(id,"server_message",reason,"You have been kicked")
-		if get_tree(): yield(get_tree(),"idle_frame")
+	if get_tree(): yield(get_tree(),"idle_frame")
 	network.disconnect_peer(id,true)
 	print("Kicked: ",id," Reason: ",reason)
 
@@ -169,6 +170,7 @@ remote func auth_client(nickname:String,password:String=""):
 			"ip":network.get_peer_address(id),
 			"nickname":nickname
 		}
+		emit_signal("user_auth",data)
 		connected.append(data)
 		print(connected)
 		print("User authenticated: ",data)
@@ -180,7 +182,7 @@ remote func auth_client(nickname:String,password:String=""):
 			main.editor_events.rpc_id(i,"create_markers", host_nickname,host_color,1)
 			main.editor_events.create_markers(nickname,color,i)
 		yield(get_tree(),"idle_frame")
-		send_project_files(id)
+		#send_project_files(id)
 	else:
 		yield(get_tree(),"idle_frame")
 		kick(id,error)

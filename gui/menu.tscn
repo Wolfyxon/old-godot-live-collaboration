@@ -74,6 +74,7 @@ margin_left = -436.0
 margin_top = -259.0
 margin_right = 435.0
 margin_bottom = 259.0
+input_pass_on_modal_close_click = false
 size_flags_horizontal = 15
 size_flags_vertical = 15
 theme = ExtResource( 9 )
@@ -116,7 +117,7 @@ focus_mode = 2
 
 [node name="vbox" type="VBoxContainer" parent="tabs/Join or host/scroll"]
 margin_right = 845.0
-margin_bottom = 503.0
+margin_bottom = 521.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -170,12 +171,12 @@ text = "WARNING: This plugin may allow remote code execution on your machine so 
 [node name="start" type="HBoxContainer" parent="tabs/Join or host/scroll/vbox"]
 margin_top = 106.0
 margin_right = 833.0
-margin_bottom = 399.0
+margin_bottom = 417.0
 focus_mode = 2
 
 [node name="join" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
 margin_right = 402.0
-margin_bottom = 293.0
+margin_bottom = 311.0
 rect_pivot_offset = Vector2( -124.5, -4.5 )
 focus_mode = 2
 size_flags_horizontal = 3
@@ -253,14 +254,14 @@ text = "Join server"
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox/start"]
 margin_left = 406.0
 margin_right = 426.0
-margin_bottom = 293.0
+margin_bottom = 311.0
 rect_min_size = Vector2( 20, 75.01 )
 focus_mode = 2
 
 [node name="host" type="VBoxContainer" parent="tabs/Join or host/scroll/vbox/start"]
 margin_left = 430.0
 margin_right = 833.0
-margin_bottom = 293.0
+margin_bottom = 311.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -338,25 +339,33 @@ text = "Start ngrok"
 script = ExtResource( 16 )
 enabled_block = NodePath("../btn_start")
 
-[node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
+[node name="LinkButton" type="LinkButton" parent="tabs/Join or host/scroll/vbox/start/host"]
 margin_top = 243.0
 margin_right = 403.0
-margin_bottom = 267.0
+margin_bottom = 257.0
+text = "How to open ports? (even without a router)"
+script = ExtResource( 14 )
+url = "https://github.com/Wolfyxon/godot-live-collaboration/wiki/Opening-ports-or-using-tunels"
+
+[node name="ch_accept" type="CheckBox" parent="tabs/Join or host/scroll/vbox/start/host"]
+margin_top = 261.0
+margin_right = 403.0
+margin_bottom = 285.0
 text = "I understand the risk"
 script = ExtResource( 16 )
 enabled_block = NodePath("../btn_start")
 
 [node name="btn_start" type="Button" parent="tabs/Join or host/scroll/vbox/start/host"]
-margin_top = 271.0
+margin_top = 289.0
 margin_right = 403.0
-margin_bottom = 293.0
+margin_bottom = 311.0
 disabled = true
 text = "Start server"
 
 [node name="Control" type="Control" parent="tabs/Join or host/scroll/vbox"]
-margin_top = 403.0
+margin_top = 421.0
 margin_right = 833.0
-margin_bottom = 503.0
+margin_bottom = 521.0
 rect_min_size = Vector2( 0, 100 )
 focus_mode = 2
 
@@ -464,7 +473,6 @@ focus_mode = 2
 text = "Not connected!"
 
 [node name="server" type="Tabs" parent="tabs"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -626,38 +634,35 @@ custom_styles/normal = ExtResource( 15 )
 text = "."
 
 [node name="_id" type="Label" parent="tabs/server/vbox/people/columns"]
-visible = false
 margin_top = 22.0
-margin_right = 117.0
+margin_right = 118.0
 margin_bottom = 44.0
 focus_mode = 2
 size_flags_horizontal = 3
 text = "0"
 
 [node name="_nick" type="Label" parent="tabs/server/vbox/people/columns"]
-visible = false
-margin_left = 121.0
+margin_left = 122.0
 margin_top = 22.0
-margin_right = 238.0
+margin_right = 240.0
 margin_bottom = 44.0
 focus_mode = 2
 size_flags_horizontal = 3
 text = "Da epic cool guy"
 
 [node name="_ip" type="MenuButton" parent="tabs/server/vbox/people/columns"]
-visible = false
+margin_left = 244.0
 margin_top = 22.0
-margin_right = 117.0
+margin_right = 361.0
 margin_bottom = 44.0
 focus_mode = 2
 size_flags_horizontal = 3
 text = "< show >"
 
 [node name="_permission" type="OptionButton" parent="tabs/server/vbox/people/columns"]
-visible = false
-margin_left = 363.0
+margin_left = 365.0
 margin_top = 22.0
-margin_right = 480.0
+margin_right = 482.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 disabled = true
@@ -666,10 +671,9 @@ items = [ "host", null, false, 2, null, "admin", null, false, 1, null, "editor",
 selected = 0
 
 [node name="_log" type="Button" parent="tabs/server/vbox/people/columns"]
-visible = false
-margin_left = 484.0
+margin_left = 486.0
 margin_top = 22.0
-margin_right = 601.0
+margin_right = 603.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 disabled = true
@@ -677,20 +681,18 @@ text = "View log"
 script = ExtResource( 4 )
 
 [node name="_kick" type="Button" parent="tabs/server/vbox/people/columns"]
-visible = false
-margin_left = 605.0
+margin_left = 607.0
 margin_top = 22.0
-margin_right = 722.0
+margin_right = 724.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 text = "Disconnect"
 script = ExtResource( 4 )
 
 [node name="_ban" type="Button" parent="tabs/server/vbox/people/columns"]
-visible = false
-margin_left = 726.0
+margin_left = 728.0
 margin_top = 22.0
-margin_right = 843.0
+margin_right = 845.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 disabled = true
@@ -876,6 +878,7 @@ icon = ExtResource( 12 )
 expand_icon = true
 
 [node name="settings" type="Tabs" parent="tabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0

@@ -33,6 +33,7 @@ func _enter_tree():
 	menu.connect("start_server",server,"start_server")
 	menu.connect("connect_to_server",client,"connect_to_server")
 	menu.connect("disconnect_from_server",client,"disconnect_from_server")
+	server.connect("user_auth",menu,"_server_user_auth")
 	
 	server.connect("gui_alert",menu,"alert")
 	client.connect("gui_alert",menu,"alert")

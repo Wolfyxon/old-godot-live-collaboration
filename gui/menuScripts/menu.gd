@@ -108,7 +108,12 @@ func _on_nick_input_text_changed(new_text):
 func _on_btn_disconnect_pressed():
 	emit_signal("disconnect_from_server")
 
+func _server_user_auth(data:Dictionary):
+	$tabs/server/vbox/people/columns.add_row(data["id"],data["nickname"],data["ip"],0)
+
 func _on_columns_kick(id:int):
+	if not main: return
+	if not main.server: return
 	main.server.kick(id,"Kicked by host.")
 
 

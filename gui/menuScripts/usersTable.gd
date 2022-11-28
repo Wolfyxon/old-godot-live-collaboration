@@ -47,9 +47,11 @@ func add_row(id:int,nickname:String,ip:String,lvl:int):
 	var ckick:Button = utils.get_node_from_array(clms,String(id)+"_kick")
 	var cban:Button = utils.get_node_from_array(clms,String(id)+"_ban")
 	
+	
+	ckick.connect("pressed",self,"_disconnect")
 	cid.text = String(id)
 	cnick.text = nickname
-	#cip
+	cip.get_popup().add_item(ip)
 	cperm.select(lvl)
 	
 	for i in clms:
@@ -58,16 +60,25 @@ func add_row(id:int,nickname:String,ip:String,lvl:int):
 		i.set_meta("nickname",nickname)
 		i.visible = true
 		
+		
+func _disconnect():
+	for i in get_children():
+		if (i is Button) and i.name.ends_with("_kick"):
+			if i.pressed:
+				kick_button(i)
+		
 func log_button(button:Button):
 	emit_signal("user_log",button.get_meta("id"))
 func kick_button(button:Button):
-	emit_signal("kick",button.get_meta("id"))
+	var id = button.get_meta("id")
+	delete_row(id)
+	emit_signal("kick",id)
 func ban_button(button:Button):
 	emit_signal("ban",button.get_meta("id"))
 
 func delete_row(id:int):
 	for i in get_children():
-		if i.name.beginsWith(String(id)+"_"):
+		if i.name.begins_with(String(id)+"_"):
 			i.queue_free()
 	
 func get_columns():
