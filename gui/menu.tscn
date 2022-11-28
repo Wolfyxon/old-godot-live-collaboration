@@ -666,9 +666,9 @@ margin_right = 482.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 disabled = true
-text = "host"
+text = "editor"
 items = [ "host", null, false, 2, null, "admin", null, false, 1, null, "editor", null, false, 0, null ]
-selected = 0
+selected = 2
 
 [node name="_log" type="Button" parent="tabs/server/vbox/people/columns"]
 margin_left = 486.0

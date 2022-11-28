@@ -46,7 +46,7 @@ func add_row(id:int,nickname:String,ip:String,lvl:int):
 	var clog:Button = utils.get_node_from_array(clms,String(id)+"_log")
 	var ckick:Button = utils.get_node_from_array(clms,String(id)+"_kick")
 	var cban:Button = utils.get_node_from_array(clms,String(id)+"_ban")
-	
+
 	
 	ckick.connect("pressed",self,"_disconnect")
 	cid.text = String(id)
@@ -59,7 +59,8 @@ func add_row(id:int,nickname:String,ip:String,lvl:int):
 		i.set_meta("nick",nickname)
 		i.set_meta("nickname",nickname)
 		i.visible = true
-		
+	cperm.select(2)
+	cperm.selected = 2
 		
 func _disconnect():
 	for i in get_children():
