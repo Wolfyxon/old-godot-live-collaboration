@@ -1,6 +1,6 @@
 # Godot Live Collaboration
 📡 Work on your Godot games with friends toghether!  
-**Make sure to also see the [wiki](https://github.com/Wolfyxon/godot-live-collaboration/wiki) and articles such as [instalation](https://github.com/Wolfyxon/godot-live-collaboration/wiki/Instalation)** and [opening ports](https://github.com/Wolfyxon/godot-live-collaboration/wiki/Opening-ports-or-using-tunels) (you don't have to deal with wifi router settings)
+**Make sure to also see the [wiki](https://github.com/Wolfyxon/godot-live-collaboration/wiki) and articles such as [instalation](https://github.com/Wolfyxon/godot-live-collaboration/wiki/Instalation) and [opening ports](https://github.com/Wolfyxon/godot-live-collaboration/wiki/Opening-ports-or-using-tunels)** (you don't have to deal with wifi router settings)
 
 ## ⚠️ Warning ⚠️
 The plugin is still at very early stage, there's no guarantee that your project will be saved correctly, it can even get permanentaly corrupted.
