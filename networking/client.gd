@@ -53,7 +53,7 @@ func connect_to_server(ip:String,port:int,password:String=""):
 		if not connected:
 			print("Connection timed out")
 			emit_signal("gui_alert"
-			,"Timed out.\nCheck the host's IP adress, port and your internet connection.\nMake sure the hosts has opened ports."
+			,"Timed out.\nCheck the host's IP adress, port and your internet connection.\nMake sure the host has opened ports."
 			,"Connection failed.")
 			disconnect_from_server()
 	else:
