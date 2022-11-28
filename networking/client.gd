@@ -85,6 +85,7 @@ func _disconnected():
 	current_ip = ""
 	current_port = 0
 	main.editor_events.remove_all_markers()
+	main.menu.progress_bar_dialog.remove_progress("project_download")
 	emit_signal("disconnected")
 
 #####################################################################

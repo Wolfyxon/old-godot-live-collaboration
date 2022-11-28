@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://addons/godot-live-collaboration/gui/menuScripts/joinRequestsList.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-live-collaboration/fonts/NotoSans/NotoSans-Regular.ttf" type="DynamicFontData" id=2]
@@ -16,7 +16,6 @@
 [ext_resource path="res://addons/godot-live-collaboration/gui/menuScripts/nodeMods/LinkButton.gd" type="Script" id=14]
 [ext_resource path="res://addons/godot-live-collaboration/gui/styles/blackBgLabel.tres" type="StyleBox" id=15]
 [ext_resource path="res://addons/godot-live-collaboration/gui/menuScripts/nodeMods/checkBox.gd" type="Script" id=16]
-[ext_resource path="res://addons/godot-live-collaboration/textures/icons/eye_opened.svg" type="Texture" id=17]
 [ext_resource path="res://addons/godot-live-collaboration/gui/menuScripts/settings.gd" type="Script" id=18]
 [ext_resource path="res://addons/godot-live-collaboration/gui/menuScripts/progress_dialog.gd" type="Script" id=19]
 
@@ -48,8 +47,6 @@ font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=12]
 font_data = ExtResource( 13 )
-
-[sub_resource type="StyleBoxEmpty" id=13]
 
 [sub_resource type="DynamicFont" id=2]
 size = 22
@@ -100,6 +97,7 @@ tab_align = 0
 script = ExtResource( 8 )
 
 [node name="Join or host" type="Tabs" parent="tabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -117,7 +115,7 @@ anchor_bottom = 1.0
 focus_mode = 2
 
 [node name="vbox" type="VBoxContainer" parent="tabs/Join or host/scroll"]
-margin_right = 833.0
+margin_right = 845.0
 margin_bottom = 503.0
 focus_mode = 2
 size_flags_horizontal = 3
@@ -878,7 +876,6 @@ icon = ExtResource( 12 )
 expand_icon = true
 
 [node name="settings" type="Tabs" parent="tabs"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0
@@ -919,100 +916,7 @@ text = "Show user cameras in 3D scenes"
 [node name="VBoxContainer" type="HBoxContainer" parent="tabs/settings/scroll/VBoxContainer"]
 margin_top = 91.0
 margin_right = 845.0
-margin_bottom = 122.0
-
-[node name="Label" type="Label" parent="tabs/settings/scroll/VBoxContainer/VBoxContainer"]
-margin_right = 62.0
-margin_bottom = 31.0
-custom_fonts/font = SubResource( 12 )
-text = " ngrok"
-
-[node name="Label2" type="Label" parent="tabs/settings/scroll/VBoxContainer/VBoxContainer"]
-margin_left = 66.0
-margin_top = 4.0
-margin_right = 743.0
-margin_bottom = 26.0
-text = " ngrok is a tool that allows you to open ports to the internet without having to do that on your wifi router."
-
-[node name="HBoxContainer" type="HBoxContainer" parent="tabs/settings/scroll/VBoxContainer"]
-margin_top = 126.0
-margin_right = 845.0
-margin_bottom = 140.0
-
-[node name="ngrok_link" type="LinkButton" parent="tabs/settings/scroll/VBoxContainer/HBoxContainer"]
-margin_right = 119.0
-margin_bottom = 14.0
-text = "https://ngrok.com/"
-script = ExtResource( 14 )
-
-[node name="ngrok_download_link" type="LinkButton" parent="tabs/settings/scroll/VBoxContainer/HBoxContainer"]
-margin_left = 123.0
-margin_right = 303.0
-margin_bottom = 14.0
-focus_mode = 2
-text = "https://ngrok.com/download"
-script = ExtResource( 14 )
-
-[node name="ngrok_aur_link" type="LinkButton" parent="tabs/settings/scroll/VBoxContainer/HBoxContainer"]
-margin_left = 307.0
-margin_right = 563.0
-margin_bottom = 14.0
-focus_mode = 2
-text = "https://aur.archlinux.org/packages/ngrok"
-script = ExtResource( 14 )
-
-[node name="ngrok" type="HBoxContainer" parent="tabs/settings/scroll/VBoxContainer"]
-margin_top = 144.0
-margin_right = 845.0
-margin_bottom = 166.0
-
-[node name="Label" type="Label" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
-margin_right = 75.0
-margin_bottom = 22.0
-text = "ngrok path"
-
-[node name="path" type="LineEdit" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
-margin_left = 79.0
-margin_right = 355.0
-margin_bottom = 22.0
-size_flags_horizontal = 3
-text = "/bin/ngrok"
-editable = false
-
-[node name="Label2" type="Label" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
-margin_left = 359.0
-margin_right = 442.0
-margin_bottom = 22.0
-text = "ngrok token"
-
-[node name="token" type="LineEdit" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
-margin_left = 446.0
-margin_right = 723.0
-margin_bottom = 22.0
-size_flags_horizontal = 3
-editable = false
-secret = true
-placeholder_text = "qwertyuiopasdfghjklzxcvbnm1234567890"
-
-[node name="btn_hide" type="Button" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
-margin_left = 727.0
-margin_right = 743.0
-margin_bottom = 22.0
-custom_styles/hover = SubResource( 13 )
-custom_styles/pressed = SubResource( 13 )
-custom_styles/focus = SubResource( 13 )
-custom_styles/disabled = SubResource( 13 )
-custom_styles/normal = SubResource( 13 )
-toggle_mode = true
-pressed = true
-icon = ExtResource( 17 )
-
-[node name="btn_ngrok_auth" type="Button" parent="tabs/settings/scroll/VBoxContainer/ngrok"]
-margin_left = 747.0
-margin_right = 845.0
-margin_bottom = 22.0
-disabled = true
-text = "Auth to ngrok"
+margin_bottom = 91.0
 
 [node name="info" type="Tabs" parent="tabs"]
 visible = false
@@ -1027,38 +931,53 @@ margin_bottom = -5.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="titles" type="VBoxContainer" parent="tabs/info/vbox"]
+[node name="CenterContainer2" type="CenterContainer" parent="tabs/info/vbox"]
 margin_right = 845.0
+margin_bottom = 100.0
+
+[node name="titles" type="VBoxContainer" parent="tabs/info/vbox/CenterContainer2"]
+margin_left = 238.0
+margin_right = 606.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 0, 50 )
 
-[node name="title" type="Label" parent="tabs/info/vbox/titles"]
-margin_right = 845.0
+[node name="title" type="Label" parent="tabs/info/vbox/CenterContainer2/titles"]
+margin_right = 368.0
 margin_bottom = 39.0
 custom_fonts/font = SubResource( 2 )
 text = "Godot Live Collaboration Addon"
 align = 1
 
-[node name="author" type="Label" parent="tabs/info/vbox/titles"]
+[node name="author" type="Label" parent="tabs/info/vbox/CenterContainer2/titles"]
 margin_top = 43.0
-margin_right = 845.0
+margin_right = 368.0
 margin_bottom = 82.0
 text = "version 1.0
 by Wolfyxon"
 align = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="tabs/info/vbox/titles"]
+[node name="links" type="HBoxContainer" parent="tabs/info/vbox/CenterContainer2/titles"]
 margin_top = 86.0
-margin_right = 845.0
+margin_right = 368.0
 margin_bottom = 100.0
+alignment = 1
 
-[node name="LinkButton" type="LinkButton" parent="tabs/info/vbox/titles/CenterContainer"]
-margin_left = 252.0
-margin_right = 592.0
+[node name="LinkButton" type="LinkButton" parent="tabs/info/vbox/CenterContainer2/titles/links"]
+margin_left = 129.0
+margin_right = 207.0
 margin_bottom = 14.0
-text = "https://github.com/Wolfyxon/godot-live-collaboration"
+text = "GitHub repo"
 script = ExtResource( 14 )
-copy_text = true
+url = "https://github.com/Wolfyxon/godot-live-collaboration"
+
+[node name="LinkButton2" type="LinkButton" parent="tabs/info/vbox/CenterContainer2/titles/links"]
+margin_left = 211.0
+margin_right = 239.0
+margin_bottom = 14.0
+focus_mode = 2
+text = "Wiki"
+script = ExtResource( 14 )
+url = "https://github.com/Wolfyxon/godot-live-collaboration/wiki"
 
 [node name="info" type="VBoxContainer" parent="tabs/info/vbox"]
 margin_top = 104.0
@@ -1195,4 +1114,3 @@ align = 1
 [connection signal="pressed" from="tabs/client/vbox/actions/btn_disconnect" to="." method="_on_btn_disconnect_pressed"]
 [connection signal="kick" from="tabs/server/vbox/people/columns" to="." method="_on_columns_kick"]
 [connection signal="requests_changed" from="tabs/server/popup_join_requests/scroll/join_requests" to="tabs" method="_on_join_requests_requests_changed"]
-[connection signal="pressed" from="tabs/settings/scroll/VBoxContainer/ngrok/btn_ngrok_auth" to="tabs/settings" method="_on_btn_ngrok_auth_pressed"]

@@ -10,6 +10,7 @@ signal server_start_failed
 signal user_connected
 signal user_disconnected
 
+
 onready var network = NetworkedMultiplayerENet.new()
 var validators = preload("../validators.gd").new()
 var utils = preload("../utils.gd").new()
@@ -58,6 +59,7 @@ func start_server(port:int,max_users:int,password:String="",manual_join_aproval=
 		add_host_to_list()
 		server_password = password
 		get_tree().network_peer = network
+		
 		print("Server started at port: ",port)
 		print("Max users: ",max_users)
 		print("Password: ",password)
