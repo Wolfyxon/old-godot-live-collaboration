@@ -118,24 +118,24 @@ puppet func create_progress(id:String,title:="Please wait",max_value:=100,initia
 	print("Server created progress bar dialog with id: ",id)
 	main.menu.progress_bar_dialog.create_progress(id,title,max_value,initial_value)
 
-puppet func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
+remote func store_file(path:String,buffer:PoolByteArray,progress_id:=""):
 	var id = get_tree().get_rpc_sender_id()
 	if id == get_tree().get_network_unique_id(): return
 	if not validators.validate_path(path): return
 	if ProjectSettings.localize_path(path).begins_with(main.plugin_dir): return
-	if id != 1: return #just for sure
 	var d = Directory.new()
 	if not d.dir_exists(path.get_base_dir()):
 		d.make_dir_recursive(path.get_base_dir())
 	d.make_dir_recursive(path.get_base_dir())
 	var f = File.new()
-	var err = f.open(path,f.WRITE)
+	var err = f.open(path,f.WRITE_READ)
 	if err != OK:
 		printerr("Error saving ",path," err: ",err)
 		return
+	if f.get_buffer(f.get_len()) == buffer: return
 	f.store_buffer(buffer)
 	f.close()
-	print("Received ",path)
+	print("Received ",path," from: ",id)
 	if progress_id != "": 
 		main.menu.progress_bar_dialog.update_progress(progress_id)
 

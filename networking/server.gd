@@ -182,12 +182,15 @@ remote func auth_client(nickname:String,password:String=""):
 			main.editor_events.rpc_id(i,"create_markers", host_nickname,host_color,1)
 			main.editor_events.create_markers(nickname,color,i)
 		yield(get_tree(),"idle_frame")
-		#send_project_files(id)
+		send_project_files(id)
 	else:
 		yield(get_tree(),"idle_frame")
 		kick(id,error)
 
-master func request_file(path:String):
+var file_cache = {
+	#path:[buffer,modification_time]
+}
+remote func request_file(path:String):
 	var id = get_tree().get_rpc_sender_id()
 	if not is_user_authenticated(id): return
 	if not validators.validate_path(path): 
@@ -196,11 +199,16 @@ master func request_file(path:String):
 	if not utils.file_exists(path): 
 		rpc_id(id,"server_message","Server is unable to locate path of the file")
 		return
+	var current_scene = main.get_editor_interface().get_edited_scene_root()
+	if  (current_scene) and (current_scene.filename == path):
+		main.editor_events.save_current_scene()
 	
 	var f = File.new()
 	var err = f.open(path,f.READ)
+	f.get_modified_time(path)
 	if err != OK:
-		rpc_id(id,"server_message","Server is unable to open the file.\nError code: "+String(err))
+		rpc_id(id,"server_message","Unable to open the file.\nError code: "+String(err))
+		return
 	var b = f.get_buffer(f.get_len())
 	client.rpc_id(id,"store_file",path,b)
 	
