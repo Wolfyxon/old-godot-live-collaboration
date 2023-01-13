@@ -17,7 +17,11 @@ body:
        How to reproduce the bug. Example: click on... press.. then go to... and then...
   validations:
     required: true
-    
+   
+   - type: textarea
+  attributes:
+    label: Expected behaviour
+  
 - type: input
   attributes:
     label: Godot Engine version
