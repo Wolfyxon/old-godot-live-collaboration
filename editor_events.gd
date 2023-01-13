@@ -91,10 +91,11 @@ func get_root():
 	return get_editor_interface().get_node("/")
 
 func get_3d_camera():
-	var cam_index = 0
-	var e = editor_interface.get_editor_viewport()
-	var tmp = e.get_child(1).get_child(1).get_child(0).get_child(0).get_child(cam_index).get_child(0).get_child(0)
-	if tmp.has_method("get_camera"): return tmp.get_camera()
+	return main.camera3D
+	#var cam_index = 0
+	#var e = editor_interface.get_editor_viewport()
+	#var tmp = e.get_child(1).get_child(1).get_child(0).get_child(0).get_child(cam_index).get_child(0).get_child(0)
+	#if tmp.has_method("get_camera"): return tmp.get_camera()
 
 
 func get_2d_mouse_position() -> Vector2:
@@ -291,15 +292,14 @@ remotesync func set_property(path:NodePath,property:String,encodedValue:PoolByte
 		if (value is String) and value.begins_with(utils.file_prefix):
 			#for some reason this cannot be done inside decode function
 			value = load(value.replace(utils.file_prefix,""))
-			
-
 		#blocked_properties[scene_path][path].append(property)
 		if not(node in cached_properties[scene_path]): 
 			cached_properties[scene_path][node] = utils.get_properties(node)
 		node.set(property,value)
 		node.set_meta("gdlc_last_modified",[id,OS.get_unix_time()])
 		cached_properties[scene_path][node][property] = value
-
+	#else:
+	#	prints(path,"not found")
 
 
 remotesync func create_node(node_class:String,parent_path:NodePath,scene:String,properties:Dictionary={},name:String=""):
@@ -341,7 +341,6 @@ func _input(event):
 		#Mouse position looks different on other screens
 		#TODO: fix
 		cursor_marker.global_position = get_editor_interface().get_base_control().get_global_mouse_position()
-	
 	if (prev_camera_pos != camera_marker.translation) or (prev_camera_rot != camera_marker.rotation):
 		rpc_all("move_camera_marker",[camera_marker.translation,camera_marker.rotation])
 		#if not main.server.server_running: rpc_id(1,"move_camera_marker",camera_marker.translation,camera_marker.rotation)
@@ -401,7 +400,6 @@ remote func move_camera_marker(pos:Vector3,rot:Vector3):
 	
 	#rpc_id(1,"set_property",m.get_path(),"translation",pos)
 	rpc_all("set_property",[m.get_path(),"translation",utils.encode(pos),"",false,true])
-	
 	#if not main.server.server_running: rpc_id(1,"set_property",m.get_path(),"rotation",rot)
 	rpc_all("set_property",[m.get_path(),"rotation",utils.encode(rot),"",false,true])
 

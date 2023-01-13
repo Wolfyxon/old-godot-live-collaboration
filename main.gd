@@ -18,6 +18,8 @@ var plugin_dir = self.get_script().get_path().get_base_dir()
 
 var remove_with_self = []
 
+var camera3D:Camera
+
 func _enter_tree():
 	self.name = "LiveCollaborationPlugin"
 	add_child(settings)
@@ -37,6 +39,8 @@ func _enter_tree():
 	
 	server.connect("gui_alert",menu,"alert")
 	client.connect("gui_alert",menu,"alert")
+	
+	set_input_event_forwarding_always_enabled()
 	#editor_events.connect("gui_alert",menu,"alert")
 
 	#for i in utils.get_descendants(get_editor_interface().get_parent()):
@@ -49,11 +53,15 @@ func _exit_tree():
 	
 	for i in remove_with_self:
 		if i and is_instance_valid(i): i.queue_free()
+
 	
 func openMenu(data):
 	menu.popup_centered()
 
+func forward_spatial_gui_input(camera, event):
+	camera3D = camera
 
-
+#func forward_spatial_input_event(camera, event):
+#	print("hi")
 
 
